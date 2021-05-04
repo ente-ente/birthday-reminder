@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/monthListFragment">
+
+    <fragment
+        android:id="@+id/monthListFragment"
+        android:name="gille.patricia.birthdayreminder.MonthListFragment"
+        android:label="@string/monthListFragmentTitle">
+        <action
+            android:id="@+id/action_monthListFragment_to_dayListFragment"
+            app:destination="@id/dayListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/dayListFragment"
+        android:name="gille.patricia.birthdayreminder.DayListFragment"
+        android:label="@string/hello_blank_fragment"
+        tools:layout="@layout/fragment_day_list">
+        <argument
+            android:name="monthId"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_dayListFragment_to_dayFragment"
+            app:destination="@id/dayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/dayFragment"
+        android:name="gille.patricia.birthdayreminder.DayFragment"
+        android:label="fragment_day"
+        tools:layout="@layout/fragment_day">
+        <argument
+            android:name="day"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </fragment>
+</navigation>
