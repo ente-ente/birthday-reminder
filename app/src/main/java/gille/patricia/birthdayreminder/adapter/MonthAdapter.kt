@@ -1,16 +1,20 @@
-package gille.patricia.birthdayreminder
+package gille.patricia.birthdayreminder.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import gille.patricia.birthdayreminder.R
+import gille.patricia.birthdayreminder.view.MonthListFragmentDirections
 
-class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
+class MonthAdapter(val context: Context) : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
 
     // Generates a [CharRange] from 'A' to 'Z' and converts it to a list
     private val list = (1).rangeTo(12).toList()
+    private val months = context.resources.getStringArray(R.array.months)
 
     class MonthViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val button: Button = view.findViewById<Button>(R.id.button_item)
@@ -29,9 +33,10 @@ class MonthAdapter : RecyclerView.Adapter<MonthAdapter.MonthViewHolder>() {
 
     override fun onBindViewHolder(holder: MonthViewHolder, position: Int) {
         val item = list.get(position)
-        holder.button.text = item.toString()
+        val month = months[item - 1]
+        holder.button.text = month
         holder.button.setOnClickListener {
-            val action = MonthListFragmentDirections.actionMonthListFragmentToDayListFragment(item)
+            val action = MonthListFragmentDirections.actionMonthListFragmentToDayListFragment(item, month)
             holder.view.findNavController().navigate(action)
         }
     }

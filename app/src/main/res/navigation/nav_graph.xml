@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/monthListFragment"
-        android:name="gille.patricia.birthdayreminder.MonthListFragment"
+        android:name="gille.patricia.birthdayreminder.view.MonthListFragment"
         android:label="@string/monthListFragmentTitle">
         <action
             android:id="@+id/action_monthListFragment_to_dayListFragment"
@@ -15,25 +15,55 @@
     </fragment>
     <fragment
         android:id="@+id/dayListFragment"
-        android:name="gille.patricia.birthdayreminder.DayListFragment"
-        android:label="@string/hello_blank_fragment"
+        android:name="gille.patricia.birthdayreminder.view.DayListFragment"
+        android:label="{title}"
         tools:layout="@layout/fragment_day_list">
         <argument
             android:name="monthId"
             android:defaultValue="0"
             app:argType="integer" />
+        <argument
+            android:name="title"
+            app:argType="string" />
         <action
             android:id="@+id/action_dayListFragment_to_dayFragment"
             app:destination="@id/dayFragment" />
     </fragment>
     <fragment
         android:id="@+id/dayFragment"
-        android:name="gille.patricia.birthdayreminder.DayFragment"
-        android:label="fragment_day"
+        android:name="gille.patricia.birthdayreminder.view.DayFragment"
+        android:label="{title}"
         tools:layout="@layout/fragment_day">
         <argument
             android:name="day"
             android:defaultValue="0"
             app:argType="integer" />
+        <argument
+            android:name="monthId"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_dayFragment_to_addBirthdayFragment"
+            app:destination="@id/addBirthdayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addBirthdayFragment"
+        android:name="gille.patricia.birthdayreminder.view.AddBirthdayFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_add_birthday">
+        <argument
+            android:name="day"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="month"
+            android:defaultValue="0"
+            app:argType="integer" />
+        <argument
+            android:name="title"
+            app:argType="string" />
     </fragment>
 </navigation>

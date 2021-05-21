@@ -4,4 +4,28 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="day_list_fragment_label">{month}</string>
     <string name="monthListFragmentTitle">Monat…</string>
+    <string name="add_birthday">Geburtstag hinzufügen</string>
+    <string name="hint_name">Name</string>
+    <string name="button_save">Speichern</string>
+    <string name="hint_year">Geburtsjahr</string>
+    <string name="hint_surname">Familienname</string>
+    <string name="add_birthday_title">Neu am %1$d. %2$s:</string>
+    <string name="hint_month">Monat</string>
+    <string name="hint_day">Tag</string>
+    <string name="db_insert_ignored">Nicht gespeichert, bereits vorhanden?</string>
+    <string name="db_insert_successful">Erfolgreich vermerkt.</string>
+    <string-array name="months">
+        <item>Januar</item>
+        <item>Februar</item>
+        <item>März</item>
+        <item>April</item>
+        <item>Mai</item>
+        <item>Juni</item>
+        <item>Juli</item>
+        <item>August</item>
+        <item>September</item>
+        <item>Oktober</item>
+        <item>November</item>
+        <item>Dezember</item>
+    </string-array>
 </resources>
