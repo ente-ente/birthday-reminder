@@ -65,5 +65,10 @@
         <argument
             android:name="title"
             app:argType="string" />
+        <action
+            android:id="@+id/action_addBirthdayFragment_to_dayFragment"
+            app:destination="@id/dayFragment"
+            app:popUpTo="@id/dayFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

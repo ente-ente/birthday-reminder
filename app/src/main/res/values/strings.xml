@@ -9,6 +9,7 @@
     <string name="button_save">Speichern</string>
     <string name="hint_year">Geburtsjahr</string>
     <string name="hint_surname">Familienname</string>
+    <string name="day_title">Geburtstage am %1$d. %2$s</string>
     <string name="add_birthday_title">Neu am %1$d. %2$s:</string>
     <string name="hint_month">Monat</string>
     <string name="hint_day">Tag</string>
