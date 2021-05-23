@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import gille.patricia.birthdayreminder.Birthday
 import gille.patricia.birthdayreminder.Person
+import gille.patricia.birthdayreminder.model.Notification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,10 +17,12 @@ import kotlinx.coroutines.launch
  * This is the backend. The database. This used to be done by the OpenHelper.
  * The fact that this has very few comments emphasizes its coolness.
  */
-@Database(entities = [Birthday::class], version = 1)
+@Database(entities = [Birthday::class, Notification::class], version = 2)
+@TypeConverters(Converters::class)
 abstract class BirthdayReminderDatabase : RoomDatabase() {
 
     abstract fun birthdayDao(): BirthdayDao
+    abstract fun notificationDao(): NotificationDao
 
     companion object {
         @Volatile

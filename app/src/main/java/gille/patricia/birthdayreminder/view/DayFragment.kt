@@ -33,7 +33,7 @@ class DayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val overviewViewModel: OverviewViewModel by activityViewModels {
-            OverviewViewModelFactory((requireActivity().application as BirthdayApplication).repository)
+            OverviewViewModelFactory((requireActivity().application as BirthdayApplication).birthdayRepository)
         }
         overviewViewModel.setDay(args.day)
         recyclerView = binding.recyclerView

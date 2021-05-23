@@ -3,6 +3,7 @@ package gille.patricia.birthdayreminder.persistence
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import gille.patricia.birthdayreminder.Birthday
+import gille.patricia.birthdayreminder.model.BirthdayWithNotifications
 
 @Dao
 interface BirthdayDao {
@@ -23,4 +24,8 @@ interface BirthdayDao {
 
     @Query("SELECT * FROM birthday WHERE day = :day AND month = :month ORDER BY year, name ASC ")
     fun loadBirthdaysFromDate(day: Int, month: Int): Array<Birthday>
+
+    @Transaction
+    @Query("SELECT * FROM Birthday")
+    fun getBirthdaysWithNotifications(): List<BirthdayWithNotifications>
 }

@@ -26,12 +26,17 @@ android {
 
     defaultConfig {
         applicationId "com.example.wordsapp"
-        minSdkVersion 19
+        minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
     }
 
     buildTypes {
@@ -63,8 +68,8 @@ dependencies {
     // You'll probably have to update the version numbers in build.gradle (Project)
 
     //Rx java
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.0.3'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
 
     // Room components
     implementation "androidx.room:room-ktx:$rootProject.roomVersion"

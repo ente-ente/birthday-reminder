@@ -29,8 +29,10 @@ class AddBirthdayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val birthdayViewmodel: BirthdayViewModel by activityViewModels {
-            BirthdayViewModelFactory((
-                    requireActivity().application as BirthdayApplication).repository)
+            BirthdayViewModelFactory(
+                (
+                        requireActivity().application as BirthdayApplication).birthdayRepository
+            )
         }
         birthdayViewmodel.setMonth(args.month)
         birthdayViewmodel.setDay(args.day)
