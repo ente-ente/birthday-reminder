@@ -84,8 +84,17 @@
                 android:minHeight="@dimen/min_height"
                 android:text="@={viewModel.yearInput}"
                 android:textSize="18sp" />
-
         </com.google.android.material.textfield.TextInputLayout>
+
+        <ProgressBar
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <Button
             android:id="@+id/button_save"
@@ -93,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/big_padding"
             android:enabled="@{viewModel.isFormValidMediator}"
-            android:onClick="@{() -> addBirthdayFragment.save(viewModel)}"
+            android:onClick="@{() -> viewModel.saveBirthday()}"
             android:text="@string/button_save" />
     </LinearLayout>
 </layout>

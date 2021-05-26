@@ -1,0 +1,3 @@
+package gille.patricia.birthdayreminder.viewmodel
+
+object StaticViewModelHelperFunctions

@@ -2,11 +2,13 @@ package gille.patricia.birthdayreminder.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import gille.patricia.birthdayreminder.Birthday
 import gille.patricia.birthdayreminder.databinding.BirthdayItemViewBinding
+import gille.patricia.birthdayreminder.view.DayFragmentDirections
 
 class BirthdayListAdapter : ListAdapter<Birthday, BirthdayListAdapter.BirthdayViewHolder>(
     BIRTHDAY_COMPARATOR
@@ -44,6 +46,10 @@ class BirthdayListAdapter : ListAdapter<Birthday, BirthdayListAdapter.BirthdayVi
     override fun onBindViewHolder(holder: BirthdayViewHolder, position: Int) {
         val current = getItem(position)
         holder.bind(current)
+        holder.itemView.setOnClickListener {
+            val action = DayFragmentDirections.actionDayFragmentToBirthdayDetailsFragment(current.id)
+            holder.itemView.findNavController().navigate(action)
+        }
     }
 
 }

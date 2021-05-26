@@ -7,7 +7,7 @@ import gille.patricia.birthdayreminder.LiveDataValidator
 import gille.patricia.birthdayreminder.LiveDataValidatorResolver
 import gille.patricia.birthdayreminder.Person
 import gille.patricia.birthdayreminder.persistence.BirthdayRepository
-import kotlinx.coroutines.Dispatchers
+import gille.patricia.birthdayreminder.persistence.BirthdaySaveError
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -30,7 +30,22 @@ class BirthdayViewModel(
             }
         }
     }
-    val allBirthdays: LiveData<List<Birthday>> = repository.allBirthdays
+    private val _snackBar = MutableLiveData<String?>()
+
+    /**
+     * Request a snackbar to display a string.
+     */
+    val snackbar: LiveData<String?>
+        get() = _snackBar
+
+    private val _spinner = MutableLiveData<Boolean>(false)
+
+    /**
+     * Show a loading spinner if true
+     */
+    val spinner: LiveData<Boolean>
+        get() = _spinner
+
     private val _month = MutableLiveData<Int>()
     val month: LiveData<Int> = _month
 
@@ -44,15 +59,13 @@ class BirthdayViewModel(
 
     val surName = MutableLiveData<String>()
 
-    fun setMonth(month: Int) {
+    fun setDayAndMonth(day: Int, month: Int) {
         _month.value = month
-    }
-
-    fun setDay(day: Int) {
         _day.value = day
     }
 
-    fun resetBirthday() {
+    fun
+            setLivedataEntriesToEmpty() {
         yearInput.value = ""
         nameInput.value = ""
         surName.value = ""
@@ -63,7 +76,7 @@ class BirthdayViewModel(
     val isFormValidMediator = MediatorLiveData<Boolean>()
 
     init {
-        resetBirthday()
+        setLivedataEntriesToEmpty()
         isFormValidMediator.value = false
         isFormValidMediator.addSource(nameInput) { validateForm() }
         isFormValidMediator.addSource(yearInput) { validateForm() }
@@ -77,14 +90,28 @@ class BirthdayViewModel(
         isFormValidMediator.value = validatorResolver.isValid()
     }
 
-    fun insertBirthday() = viewModelScope.launch(Dispatchers.IO) {
-        repository.insert(
-            Birthday(
-                day.value!!, month.value!!, yearInput.value!!.toInt(),
-                Person(nameInput.value!!, surName.value ?: "")
-            )
-        )
+    fun saveBirthday() {
+        viewModelScope.launch {
+            try {
+                _spinner.value = true
+                if (repository.insertIfNotExists(
+                                Birthday(
+                                        day.value!!, month.value!!, yearInput.value!!.toInt(),
+                                        Person(nameInput.value!!, surName.value ?: "")
+                                )
+                        ) == 0) {
+                    _snackBar.value = "Birthday saved."
+                } else {
+                    _snackBar.value = "Birthday already in database."
+                }
+            } catch (error: BirthdaySaveError) {
+                _snackBar.value = error.message
+            } finally {
+                _spinner.value = false
+            }
+        }
     }
+
 
     override fun onCleared() {
         // DO NOT forget to remove sources from mediator
@@ -92,14 +119,8 @@ class BirthdayViewModel(
         isFormValidMediator.removeSource(yearInput)
     }
 
-    fun alreadySaved(): Boolean {
-        val b = Birthday(
-            day.value!!,
-            month.value!!,
-            yearInput.value!!.toInt(),
-            Person(nameInput.value!!, surName.value)
-        )
-        return allBirthdays.value!!.contains(b)
+    fun onSnackbarShown() {
+        _snackBar.value = null
     }
 }
 

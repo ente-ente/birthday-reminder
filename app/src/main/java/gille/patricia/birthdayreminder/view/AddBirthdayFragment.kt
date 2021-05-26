@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.snackbar.Snackbar
 import gille.patricia.birthdayreminder.BirthdayApplication
 import gille.patricia.birthdayreminder.R
 import gille.patricia.birthdayreminder.databinding.FragmentAddBirthdayBinding
@@ -32,43 +32,50 @@ class AddBirthdayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val birthdayViewmodel: BirthdayViewModel by activityViewModels {
             BirthdayViewModelFactory(
-                (
-                        requireActivity().application as BirthdayApplication).birthdayRepository
+                    (
+                            requireActivity().application as BirthdayApplication).birthdayRepository
             )
         }
-        birthdayViewmodel.setMonth(args.month)
-        birthdayViewmodel.setDay(args.day)
+
+        birthdayViewmodel.setDayAndMonth(args.day, args.month)
+
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
-            birthdayViewmodel.resetBirthday()
+            birthdayViewmodel.setLivedataEntriesToEmpty()
         }
         callback.handleOnBackPressed()
         binding.viewModel = birthdayViewmodel
         binding.lifecycleOwner = viewLifecycleOwner
         binding.addBirthdayFragment = this@AddBirthdayFragment
-    }
 
-
-    fun save(viewModel: BirthdayViewModel) {
-        if (viewModel.alreadySaved()) {
-            Toast.makeText(
-                context, "Birthday is already in database. Check the name. " +
-                        "Use back button to leave screen.", Toast.LENGTH_LONG
-            ).show()
-        } else {
-            viewModel.insertBirthday()
-            Toast.makeText(context, "Birthday saved.", Toast.LENGTH_LONG).show()
-            goToDayOverviewScreen(viewModel)
-
+        // show the spinner when [MainViewModel.spinner] is true
+        birthdayViewmodel.spinner.observe(viewLifecycleOwner) { value ->
+            value.let { show ->
+                binding.spinner.visibility = if (show) View.VISIBLE else View.GONE
+            }
         }
-        // hide keyboard
-        StaticViewHelperFunctions.hideKeyboardInFragment(requireView())
+
+        // Show a snackbar whenever the [ViewModel.snackbar] is updated a non-null value
+        birthdayViewmodel.snackbar.observe(viewLifecycleOwner) { text ->
+            text?.let {
+                val viewModel = binding.viewModel
+                val snackbar = Snackbar.make(binding.root, text, Snackbar.LENGTH_LONG)
+                snackbar.setAction("GO TO DAY OVERVIEW", object : View.OnClickListener {
+                    override fun onClick(v: View) {
+                        goToDayOverviewScreen(viewModel!!)
+                    }
+                })
+                StaticViewHelperFunctions.hideKeyboardInFragment(requireView())
+                snackbar.show()
+                birthdayViewmodel.onSnackbarShown()
+            }
+        }
     }
 
     private fun goToDayOverviewScreen(birthdayViewModel: BirthdayViewModel) {
         val title = resources.getString(
-            R.string.day_title,
-            args.day,
-            resources.getStringArray(R.array.months)[args.month - 1]
+                R.string.day_title,
+                birthdayViewModel.day.value,
+                resources.getStringArray(R.array.months)[birthdayViewModel.month.value!! - 1]
         )
         findNavController().navigate(
             AddBirthdayFragmentDirections.actionAddBirthdayFragmentToDayFragment(
