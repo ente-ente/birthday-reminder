@@ -3,7 +3,6 @@ package gille.patricia.birthdayreminder
 import android.app.Application
 import gille.patricia.birthdayreminder.persistence.BirthdayReminderDatabase
 import gille.patricia.birthdayreminder.persistence.BirthdayRepository
-import gille.patricia.birthdayreminder.persistence.NotificationRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
@@ -14,6 +13,10 @@ class BirthdayApplication : Application() {
     // Using by lazy so the database and the repository are only created when they're needed
     // rather than when the application starts
     private val database by lazy { BirthdayReminderDatabase.getDatabase(this, applicationScope) }
-    val birthdayRepository by lazy { BirthdayRepository(database.birthdayDao()) }
-    val notificationRepository by lazy { NotificationRepository(database.notificationDao()) }
+    val birthdayRepository by lazy {
+        BirthdayRepository(
+            database.birthdayDao(),
+            database.notificationDao()
+        )
+    }
 }

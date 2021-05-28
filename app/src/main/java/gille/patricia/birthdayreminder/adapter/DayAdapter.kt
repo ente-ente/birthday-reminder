@@ -32,6 +32,7 @@ class DayAdapter(private val numberOfDays: Int, val monthId: Int, val monthName:
             val action = DayListFragmentDirections.actionDayListFragmentToDayFragment(item, monthId, title)
             holder.view.findNavController().navigate(action)
         }
+
     }
 
     override fun getItemCount(): Int {

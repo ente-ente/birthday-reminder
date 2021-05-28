@@ -15,6 +15,24 @@
     <string name="hint_day">Tag</string>
     <string name="db_insert_ignored">Nicht gespeichert, bereits vorhanden?</string>
     <string name="db_insert_successful">Erfolgreich vermerkt.</string>
+    <string name="alarmSetIconContentDescription">alarm set</string>
+    <string name="alarmNotSetIconContentDescription">alarm not set</string>
+    <string name="alarmOnIconContentDescription">alarm on</string>
+    <string name="alarmOffIconContentDescription">alarm off</string>
+    <string name="done">Fertig</string>
+    <string name="new_alarm_textview">Neuer Alarm</string>
+    <string name="name">Name</string>
+    <string name="surname">Nachname</string>
+    <string name="year">Jahr</string>
+    <string name="first_reminder">1. Erinnerung:</string>
+    <string name="repeat">Alle …</string>
+    <string name="repeat_all">"Wiederholen alle "</string>
+    <string name="last_reminder">Letzte Erinnerung:</string>
+    <string name="days">days</string>
+    <string name="days_before">Tage vorher</string>
+    <string name="number">Anzahl</string>
+    <string name="days_repeat_after_text">Tage wiederholen</string>
+    <string name="all">Alle</string>
     <string-array name="months">
         <item>Januar</item>
         <item>Februar</item>

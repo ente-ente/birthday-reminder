@@ -30,45 +30,12 @@ class BirthdayViewModel(
             }
         }
     }
-    private val _snackBar = MutableLiveData<String?>()
 
-    /**
-     * Request a snackbar to display a string.
-     */
-    val snackbar: LiveData<String?>
-        get() = _snackBar
-
-    private val _spinner = MutableLiveData<Boolean>(false)
-
-    /**
-     * Show a loading spinner if true
-     */
-    val spinner: LiveData<Boolean>
-        get() = _spinner
-
-    private val _month = MutableLiveData<Int>()
-    val month: LiveData<Int> = _month
-
-    private val _day = MutableLiveData<Int>()
-    val day: LiveData<Int> = _day
+    val surName = MutableLiveData<String>()
 
     val nameInput = MutableLiveData<String>()
     val nameInputValidator = LiveDataValidator(nameInput).apply {
         addRule("Name erforderlich") { it.isNullOrBlank() || it.equals("") }
-    }
-
-    val surName = MutableLiveData<String>()
-
-    fun setDayAndMonth(day: Int, month: Int) {
-        _month.value = month
-        _day.value = day
-    }
-
-    fun
-            setLivedataEntriesToEmpty() {
-        yearInput.value = ""
-        nameInput.value = ""
-        surName.value = ""
     }
 
     //We will use a mediator so we can update the error state of our form fields
@@ -80,7 +47,6 @@ class BirthdayViewModel(
         isFormValidMediator.value = false
         isFormValidMediator.addSource(nameInput) { validateForm() }
         isFormValidMediator.addSource(yearInput) { validateForm() }
-
     }
 
     //This is called whenever the nameInputLiveData and yearInputLiveData changes
@@ -90,16 +56,46 @@ class BirthdayViewModel(
         isFormValidMediator.value = validatorResolver.isValid()
     }
 
+    private val _snackBar = MutableLiveData<String?>()
+    val snackbar: LiveData<String?>
+        get() = _snackBar
+
+    fun onSnackbarShown() {
+        _snackBar.value = null
+    }
+
+    private val _spinner = MutableLiveData<Boolean>(false)
+    val spinner: LiveData<Boolean>
+        get() = _spinner
+
+    private val _month = MutableLiveData<Int>()
+    val month: LiveData<Int> = _month
+
+    private val _day = MutableLiveData<Int>()
+    val day: LiveData<Int> = _day
+
+    fun setDayAndMonth(day: Int, month: Int) {
+        _month.value = month
+        _day.value = day
+    }
+
+    fun setLivedataEntriesToEmpty() {
+        yearInput.value = ""
+        nameInput.value = ""
+        surName.value = ""
+    }
+
     fun saveBirthday() {
         viewModelScope.launch {
             try {
                 _spinner.value = true
                 if (repository.insertIfNotExists(
-                                Birthday(
-                                        day.value!!, month.value!!, yearInput.value!!.toInt(),
-                                        Person(nameInput.value!!, surName.value ?: "")
-                                )
-                        ) == 0) {
+                        Birthday(
+                            day.value!!, month.value!!, yearInput.value!!.toInt(),
+                            false,
+                            Person(nameInput.value!!, surName.value ?: "")
+                        )
+                    ) == 0) {
                     _snackBar.value = "Birthday saved."
                 } else {
                     _snackBar.value = "Birthday already in database."
@@ -112,26 +108,10 @@ class BirthdayViewModel(
         }
     }
 
-
     override fun onCleared() {
         // DO NOT forget to remove sources from mediator
         isFormValidMediator.removeSource(nameInput)
         isFormValidMediator.removeSource(yearInput)
     }
-
-    fun onSnackbarShown() {
-        _snackBar.value = null
-    }
 }
 
-class BirthdayViewModelFactory(
-    private val repository: BirthdayRepository
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(BirthdayViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return BirthdayViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}

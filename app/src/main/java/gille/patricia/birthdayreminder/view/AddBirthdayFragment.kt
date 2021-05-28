@@ -14,7 +14,7 @@ import gille.patricia.birthdayreminder.BirthdayApplication
 import gille.patricia.birthdayreminder.R
 import gille.patricia.birthdayreminder.databinding.FragmentAddBirthdayBinding
 import gille.patricia.birthdayreminder.viewmodel.BirthdayViewModel
-import gille.patricia.birthdayreminder.viewmodel.BirthdayViewModelFactory
+import gille.patricia.birthdayreminder.viewmodel.ViewModelFactory
 
 class AddBirthdayFragment : Fragment() {
     private var _binding: FragmentAddBirthdayBinding? = null
@@ -31,9 +31,9 @@ class AddBirthdayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val birthdayViewmodel: BirthdayViewModel by activityViewModels {
-            BirthdayViewModelFactory(
-                    (
-                            requireActivity().application as BirthdayApplication).birthdayRepository
+            ViewModelFactory(
+                (requireActivity().application as BirthdayApplication)
+                    .birthdayRepository
             )
         }
 

@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
  * Abstracted Repository as promoted by the Architecture Guide.
  * https://developer.android.com/topic/libraries/architecture/guide.html
  */
-class BirthdayRepository(private val birthdayDao: BirthdayDao) {
+class BirthdayRepository(private val birthdayDao: BirthdayDao, notificationDao: NotificationDao) {
 
     // Room executes all queries on a separate thread.
     // Observed Flow will notify the observer when the data has changed.

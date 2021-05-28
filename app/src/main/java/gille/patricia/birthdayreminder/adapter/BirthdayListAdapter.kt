@@ -1,8 +1,10 @@
 package gille.patricia.birthdayreminder.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.findNavController
+import android.widget.Button
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -30,8 +32,14 @@ class BirthdayListAdapter : ListAdapter<Birthday, BirthdayListAdapter.BirthdayVi
         RecyclerView.ViewHolder(binding.root) {
         fun bind(current: Birthday?) {
             binding.birthday = current
+
             binding.executePendingBindings()
         }
+
+        val button: Button = binding.buttonItem
+        val alarmOn = binding.imageViewAlarmOn
+        val alarmOff = binding.imageViewAlarmOff
+
 
     }
 
@@ -46,9 +54,19 @@ class BirthdayListAdapter : ListAdapter<Birthday, BirthdayListAdapter.BirthdayVi
     override fun onBindViewHolder(holder: BirthdayViewHolder, position: Int) {
         val current = getItem(position)
         holder.bind(current)
-        holder.itemView.setOnClickListener {
-            val action = DayFragmentDirections.actionDayFragmentToBirthdayDetailsFragment(current.id)
-            holder.itemView.findNavController().navigate(action)
+        holder.button.setOnClickListener {
+            val action = DayFragmentDirections.actionDayFragmentToBirthdaySettingsDialogue()
+            Navigation.findNavController(it).navigate(action)
+        }
+        holder.alarmOn.visibility = if (current.notificationActive) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
+        }
+        holder.alarmOff.visibility = if (!current.notificationActive) {
+            View.VISIBLE
+        } else {
+            View.INVISIBLE
         }
     }
 

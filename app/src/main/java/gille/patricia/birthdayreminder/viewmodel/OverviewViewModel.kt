@@ -1,6 +1,9 @@
 package gille.patricia.birthdayreminder.viewmodel
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import gille.patricia.birthdayreminder.Birthday
 import gille.patricia.birthdayreminder.persistence.BirthdayRepository
 
@@ -58,16 +61,5 @@ class OverviewViewModel(repository: BirthdayRepository) : ViewModel() {
                 it.day == day.value && it.month == month.value
             }
         }
-    }
-}
-
-
-class OverviewViewModelFactory(private val repository: BirthdayRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(OverviewViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return OverviewViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

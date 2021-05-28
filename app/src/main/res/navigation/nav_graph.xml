@@ -49,8 +49,8 @@
             android:id="@+id/action_dayFragment_to_addBirthdayFragment"
             app:destination="@id/addBirthdayFragment" />
         <action
-            android:id="@+id/action_dayFragment_to_birthdayDetailsFragment"
-            app:destination="@id/birthdayDetailsFragment" />
+            android:id="@+id/action_dayFragment_to_birthdaySettingsDialogue"
+            app:destination="@id/birthdaySettingsDialogue" />
     </fragment>
     <fragment
         android:id="@+id/addBirthdayFragment"
@@ -74,14 +74,8 @@
             app:popUpTo="@id/dayFragment"
             app:popUpToInclusive="true" />
     </fragment>
-    <fragment
-        android:id="@+id/birthdayDetailsFragment"
-        android:name="gille.patricia.birthdayreminder.view.BirthdayDetailsFragment"
-        android:label="fragment_birthday_details"
-        tools:layout="@layout/fragment_birthday_details">
-        <argument
-            android:name="id"
-            android:defaultValue="0L"
-            app:argType="long" />
-    </fragment>
+    <dialog
+        android:id="@+id/birthdaySettingsDialogue"
+        android:name="gille.patricia.birthdayreminder.view.BirthdaySettingsDialogue"
+        android:label="BirthdaySettingsDialogue" />
 </navigation>

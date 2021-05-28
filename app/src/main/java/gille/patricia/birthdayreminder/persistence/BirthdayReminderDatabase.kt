@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
  * This is the backend. The database. This used to be done by the OpenHelper.
  * The fact that this has very few comments emphasizes its coolness.
  */
-@Database(entities = [Birthday::class, Notification::class], version = 2)
+@Database(entities = [Birthday::class, Notification::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class BirthdayReminderDatabase : RoomDatabase() {
 
@@ -79,9 +79,9 @@ abstract class BirthdayReminderDatabase : RoomDatabase() {
             birthdayDao.deleteAll()
 
             val birthDays = arrayOf(
-                    Birthday(22, 11, 1979, Person("Patricia", "Gille")),
-                    Birthday(9, 7, 1986, Person("Stefan", "Gille")),
-                    Birthday(9, 7, 1983, Person("Marie", "Reuther"))
+                Birthday(22, 11, 1979, false, Person("Patricia", "Gille")),
+                Birthday(9, 7, 1986, false, Person("Stefan", "Gille")),
+                Birthday(9, 7, 1983, false, Person("Marie", "Reuther"))
             )
             birthdayDao.insertBirthdays(*birthDays)
         }

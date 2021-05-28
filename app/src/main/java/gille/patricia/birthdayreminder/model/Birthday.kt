@@ -18,8 +18,11 @@ data class Birthday(
     val day: Int,
     val month: Int,
     val year: Int,
+    val notificationActive: Boolean,
     @Embedded val person: Person
 ) {
+
+
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L
     fun isEqual(other: Birthday): Boolean {

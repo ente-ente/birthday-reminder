@@ -14,7 +14,7 @@ import gille.patricia.birthdayreminder.R
 import gille.patricia.birthdayreminder.adapter.DayAdapter
 import gille.patricia.birthdayreminder.databinding.FragmentDayListBinding
 import gille.patricia.birthdayreminder.viewmodel.OverviewViewModel
-import gille.patricia.birthdayreminder.viewmodel.OverviewViewModelFactory
+import gille.patricia.birthdayreminder.viewmodel.ViewModelFactory
 
 
 class DayListFragment : Fragment() {
@@ -33,7 +33,7 @@ class DayListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val overviewViewModel: OverviewViewModel by activityViewModels {
-            OverviewViewModelFactory((requireActivity().application as BirthdayApplication).birthdayRepository)
+            ViewModelFactory((requireActivity().application as BirthdayApplication).birthdayRepository)
         }
         overviewViewModel.setMonth(args.monthId)
         val numberOfDays = overviewViewModel.numberOfDays.value ?: 0
