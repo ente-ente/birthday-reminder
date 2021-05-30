@@ -18,11 +18,9 @@ data class Birthday(
     val day: Int,
     val month: Int,
     val year: Int,
-    val notificationActive: Boolean,
+    var notificationActive: Boolean,
     @Embedded val person: Person
 ) {
-
-
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L
     fun isEqual(other: Birthday): Boolean {
@@ -30,6 +28,5 @@ data class Birthday(
                 day == other.day && month == other.month &&
                 year == other.year
     }
-
 }
 

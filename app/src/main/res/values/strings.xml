@@ -33,6 +33,7 @@
     <string name="number">Anzahl</string>
     <string name="days_repeat_after_text">Tage wiederholen</string>
     <string name="all">Alle</string>
+    <string name="notificationActive">Benachrichtigung wird gesendet</string>
     <string-array name="months">
         <item>Januar</item>
         <item>Februar</item>

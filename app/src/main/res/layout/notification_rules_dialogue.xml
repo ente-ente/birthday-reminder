@@ -33,6 +33,15 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/guideline" />
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:labelFor="@id/notificationActive"
+            android:text="@string/notificationActive"
+            app:layout_constraintBaseline_toBaselineOf="@+id/notificationActive"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline" />
+
         <EditText
             android:id="@+id/first_reminder"
             android:layout_width="0dp"
@@ -42,7 +51,7 @@
             android:hint="@string/number"
             android:importantForAutofill="no"
             android:inputType="number"
-            app:layout_constraintEnd_toStartOf="@+id/days_before_text"
+            app:layout_constraintEnd_toStartOf="@id/guideline7"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toTopOf="@+id/guideline3" />
 
@@ -70,12 +79,12 @@
             android:orientation="vertical"
             app:layout_constraintGuide_begin="157dp" />
 
-        <androidx.constraintlayout.widget.Guideline
+        <!--<androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="200dp" />
+            app:layout_constraintGuide_begin="200dp" />-->
 
         <EditText
             android:id="@+id/repeat"
@@ -87,7 +96,7 @@
             android:hint="@string/number"
             android:importantForAutofill="no"
             android:inputType="number"
-            app:layout_constraintEnd_toStartOf="@+id/days_repeat_after_text"
+            app:layout_constraintEnd_toStartOf="@id/guideline7"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@+id/first_reminder" />
 
@@ -111,7 +120,7 @@
             android:hint="@string/number"
             android:importantForAutofill="no"
             android:inputType="number"
-            app:layout_constraintEnd_toStartOf="@+id/last_reminder_2nd_text"
+            app:layout_constraintEnd_toStartOf="@+id/guideline7"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@+id/repeat" />
 
@@ -126,6 +135,15 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline4"
             app:layout_constraintStart_toEndOf="@+id/last_reminder" />
 
+        <CheckBox
+            android:id="@+id/notificationActive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="start|top"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toBottomOf="@+id/last_reminder" />
+
         <Button
             android:id="@+id/doneButton"
             android:layout_width="wrap_content"
@@ -133,7 +151,7 @@
             android:text="@string/done"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline7"
-            app:layout_constraintTop_toBottomOf="@+id/last_reminder" />
+            app:layout_constraintTop_toBottomOf="@+id/notificationActive" />
 
         <Button
             android:id="@+id/cancelButton"
@@ -149,7 +167,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
+            app:layout_constraintGuide_percent="0.56" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline3"

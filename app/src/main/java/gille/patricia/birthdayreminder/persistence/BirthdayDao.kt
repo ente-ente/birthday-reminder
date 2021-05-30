@@ -3,7 +3,6 @@ package gille.patricia.birthdayreminder.persistence
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import gille.patricia.birthdayreminder.Birthday
-import gille.patricia.birthdayreminder.model.BirthdayWithNotifications
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -29,8 +28,18 @@ interface BirthdayDao {
         return -1
     }
 
+    @Transaction
+    suspend fun toggleNotification(birthdayId: Long, notificationActive: Boolean) {
+        val birthday = findById(birthdayId)
+        birthday.notificationActive = notificationActive
+        update(birthday)
+    }
+
+    @Update
+    suspend fun update(birthday: Birthday)
+
     @Delete
-    fun deleteBirthdays(vararg birthdays: Birthday)
+    suspend fun deleteBirthdays(vararg birthdays: Birthday)
 
     @Query("SELECT * FROM birthday WHERE id = :id LIMIT 1")
     fun findById(id: Long): Birthday
@@ -41,12 +50,4 @@ interface BirthdayDao {
 
     @Query("SELECT * FROM birthday WHERE day = :day AND month = :month ORDER BY year, name ASC ")
     fun birthdaysWithDayAndMonth(day: Int, month: Int): Flow<List<Birthday>>
-
-    @Transaction
-    @Query("SELECT * FROM Birthday")
-    fun getBirthdaysWithNotifications(): List<BirthdayWithNotifications>
-
-    @Transaction
-    @Query("SELECT * FROM birthday WHERE id = :id LIMIT 1")
-    fun getBirthdayWithNotifications(id: Long): BirthdayWithNotifications
 }

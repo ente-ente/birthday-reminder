@@ -16,7 +16,8 @@ class BirthdayApplication : Application() {
     val birthdayRepository by lazy {
         BirthdayRepository(
             database.birthdayDao(),
-            database.notificationDao()
+            database.notificationDao(),
+            database.notificationRuleDao()
         )
     }
 }
