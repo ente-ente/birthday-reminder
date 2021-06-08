@@ -15,6 +15,8 @@ class BirthdayViewModel(
     private val repository: BirthdayRepository,
 ) : ViewModel() {
     val yearInput = MutableLiveData<String>()
+
+
     private val currentYear = Calendar.getInstance().get(Calendar.YEAR)
     val yearInputValidator = LiveDataValidator(yearInput).apply {
         //Whenever the condition of the predicate is true, the error message should be emitted

@@ -59,11 +59,9 @@ class AddBirthdayFragment : Fragment() {
             text?.let {
                 val viewModel = binding.viewModel
                 val snackbar = Snackbar.make(binding.root, text, Snackbar.LENGTH_LONG)
-                snackbar.setAction("GO TO DAY OVERVIEW", object : View.OnClickListener {
-                    override fun onClick(v: View) {
-                        goToDayOverviewScreen(viewModel!!)
-                    }
-                })
+                snackbar.setAction(
+                    "GO TO DAY OVERVIEW"
+                ) { goToDayOverviewScreen(viewModel!!) }
                 StaticViewHelperFunctions.hideKeyboardInFragment(requireView())
                 snackbar.show()
                 birthdayViewmodel.onSnackbarShown()

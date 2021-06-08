@@ -22,8 +22,9 @@ data class NotificationRule(
     val birthdayId: Long,
     val firstNotification: Int, // ... days before bd
     val repeat: Int,            // repeat every ... days
-    val lastNotification: Int   // ... days before bd
+    val lastNotification: Int   // ... days before b
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L
+    var version: Int = 0
 }

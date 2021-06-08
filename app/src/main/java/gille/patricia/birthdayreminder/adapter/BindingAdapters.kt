@@ -1,8 +1,8 @@
-package gille.patricia.birthdayreminder
+package gille.patricia.birthdayreminder.adapter
 
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import gille.patricia.birthdayreminder.adapter.BirthdayListAdapter
+import gille.patricia.birthdayreminder.Birthday
 
 @BindingAdapter("listData")
 fun bindRecyclerView(

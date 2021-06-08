@@ -73,8 +73,23 @@ class BirthdayRepository(
     suspend fun toggleNotification(birthdayId: Long, notificationActive: Boolean) {
         return birthdayDao.toggleNotification(birthdayId, notificationActive)
     }
+
+    @WorkerThread
+    suspend fun notificationRuleForBirthdayCount(birthdayId: Long): Int {
+        return notificationRuleDao.count(birthdayId)
+    }
+/*
+    @Transaction
+    suspend fun insertNewNotificationRule(notificationRule: NotificationRule): Long {
+        val notificationFactory = NotificationFactory()
+        val firstNotification: Notification = notificationFactory.next(notificationRule)
+        notificationDao.insert(firstNotification)
+        return notificationRuleDao.insert(notificationRule)
+    }*/
 }
 
 class BirthdaySaveError(message: String, cause: Throwable?) : Throwable(message, cause)
 
 class NotificationSaveError(message: String, cause: Throwable?) : Throwable(message, cause)
+
+class NotificationRuleSaveError(message: String, cause: Throwable?) : Throwable(message, cause)

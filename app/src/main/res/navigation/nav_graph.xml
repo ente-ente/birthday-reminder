@@ -76,11 +76,11 @@
     </fragment>
     <dialog
         android:id="@+id/birthdaySettingsDialogue"
-        android:name="gille.patricia.birthdayreminder.view.BirthdaySettingsDialogue"
+        android:name="gille.patricia.birthdayreminder.view.NotificationRulesDialogue"
         android:label="BirthdaySettingsDialogue">
         <argument
             android:name="birthdayId"
-            android:defaultValue="-1"
-            app:argType="integer" />
+            android:defaultValue="-1L"
+            app:argType="long" />
     </dialog>
 </navigation>

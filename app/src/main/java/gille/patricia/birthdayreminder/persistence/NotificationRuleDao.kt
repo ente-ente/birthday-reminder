@@ -19,4 +19,7 @@ interface NotificationRuleDao {
 
     @Query("SELECT * FROM notificationRule WHERE birthdayId = :birthdayId LIMIT 1")
     suspend fun getForBirthdayId(birthdayId: Long): NotificationRule
+
+    @Query("SELECT COUNT() FROM notificationRule WHERE birthdayId = :birthdayId")
+    suspend fun count(birthdayId: Long): Int
 }

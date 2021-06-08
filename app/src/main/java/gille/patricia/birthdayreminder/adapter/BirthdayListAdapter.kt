@@ -55,7 +55,8 @@ class BirthdayListAdapter : ListAdapter<Birthday, BirthdayListAdapter.BirthdayVi
         val current = getItem(position)
         holder.bind(current)
         holder.button.setOnClickListener {
-            val action = DayFragmentDirections.actionDayFragmentToBirthdaySettingsDialogue()
+            val action =
+                DayFragmentDirections.actionDayFragmentToBirthdaySettingsDialogue(current.id)
             Navigation.findNavController(it).navigate(action)
         }
         holder.alarmOn.visibility = if (current.notificationActive) {
