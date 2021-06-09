@@ -60,6 +60,11 @@ class BirthdayRepository(
     }
 
     @WorkerThread
+    suspend fun findNotificationRuleById(id: Long): NotificationRule {
+        return notificationRuleDao.findById(id)
+    }
+
+    @WorkerThread
     suspend fun insertNotificationRule(notificationRule: NotificationRule): Long {
         return notificationRuleDao.insert(notificationRule)
     }

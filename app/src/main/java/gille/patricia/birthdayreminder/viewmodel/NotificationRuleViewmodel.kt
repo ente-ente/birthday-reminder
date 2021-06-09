@@ -38,7 +38,7 @@ class NotificationRuleViewmodel(private val repository: BirthdayRepository) : Vi
     private fun initNotificationRuleFields(birthdayId: Long) {
         CoroutineScope(Dispatchers.IO).launch {
             val notificationRule: NotificationRule
-            if (notificationExistsForBirthday(birthdayId)) {
+            if (notificationRuleExistsForBirthday(birthdayId)) {
                 notificationRule = repository.getNotificationRule(birthdayId)
                 notificationRuleId = notificationRule.id
             } else {
@@ -51,6 +51,7 @@ class NotificationRuleViewmodel(private val repository: BirthdayRepository) : Vi
     }
 
     fun saveRule() {
+
         val notificationRule =
             NotificationRule(
                 birthdayId.value!!,
@@ -62,9 +63,13 @@ class NotificationRuleViewmodel(private val repository: BirthdayRepository) : Vi
         CoroutineScope(Dispatchers.IO).launch {
             if (notificationRuleId > -1) {
                 notificationRule.id = notificationRuleId
-                //TODO only if something has changed
-                notificationRule.version = notificationRule.version + 1
-                update(notificationRule)
+                //check if something has changed
+                val oldRule = repository.findNotificationRuleById(notificationRuleId)
+
+                if (!oldRule.sameAs(notificationRule)) {
+                    notificationRule.version = notificationRule.version + 1
+                    update(notificationRule)
+                }
             } else {
                 notificationRule.version = 1
                 insert(notificationRule)
@@ -73,7 +78,7 @@ class NotificationRuleViewmodel(private val repository: BirthdayRepository) : Vi
         }
     }
 
-    private suspend fun notificationExistsForBirthday(birthdayId: Long): Boolean {
+    private suspend fun notificationRuleExistsForBirthday(birthdayId: Long): Boolean {
         return repository.notificationRuleForBirthdayCount(birthdayId) > 0
     }
 

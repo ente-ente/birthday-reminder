@@ -24,6 +24,13 @@ data class NotificationRule(
     val repeat: Int,            // repeat every ... days
     val lastNotification: Int   // ... days before b
 ) {
+    fun sameAs(notificationRule: NotificationRule): Boolean {
+        return (birthdayId == notificationRule.birthdayId &&
+                firstNotification == notificationRule.firstNotification &&
+                repeat == notificationRule.repeat &&
+                lastNotification == notificationRule.lastNotification)
+    }
+
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L
     var version: Int = 0
