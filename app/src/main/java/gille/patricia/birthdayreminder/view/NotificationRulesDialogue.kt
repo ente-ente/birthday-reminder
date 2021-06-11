@@ -38,9 +38,6 @@ class NotificationRulesDialogue : BottomSheetDialogFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         notificationRuleViewmodel.initLiveData(args.birthdayId)
 
-
-        // When the user clicks the Done button, use the data here to either update
-        // an existing item or create a new one
         binding.doneButton.setOnClickListener {
             notificationRuleViewmodel.saveRule()
             dismiss()

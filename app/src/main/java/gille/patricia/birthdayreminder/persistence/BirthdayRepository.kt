@@ -2,10 +2,14 @@ package gille.patricia.birthdayreminder.persistence
 
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
+import androidx.room.Transaction
 import gille.patricia.birthdayreminder.Birthday
 import gille.patricia.birthdayreminder.model.Notification
+import gille.patricia.birthdayreminder.model.NotificationFactory
 import gille.patricia.birthdayreminder.model.NotificationRule
 import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
+import java.time.OffsetDateTime
 
 /**
  * Abstracted Repository as promoted by the Architecture Guide.
@@ -31,9 +35,11 @@ class BirthdayRepository(
         return birthdayDao.birthdaysWithDayAndMonth(day, month)
     }
 
-    // By default Room runs suspend queries off the main thread, therefore, we don't need to
-    // implement anything else to ensure we're not doing long running database work
-    // off the main thread.
+    @WorkerThread
+    suspend fun updateBirthday(birthday: Birthday) {
+        birthdayDao.update(birthday)
+    }
+
     @WorkerThread
     suspend fun insert(birthday: Birthday) {
         return birthdayDao.insertBirthday(birthday)
@@ -47,6 +53,11 @@ class BirthdayRepository(
     @WorkerThread
     suspend fun getNotification(id: Long): Notification {
         return notificationDao.findById(id)
+    }
+
+    @WorkerThread
+    suspend fun getDueNotifications(dateTime: OffsetDateTime): List<Notification> {
+        return notificationDao.getDueNotifications(dateTime)
     }
 
     @WorkerThread
@@ -64,13 +75,17 @@ class BirthdayRepository(
         return notificationRuleDao.findById(id)
     }
 
-    @WorkerThread
-    suspend fun insertNotificationRule(notificationRule: NotificationRule): Long {
-        return notificationRuleDao.insert(notificationRule)
-    }
-
-    @WorkerThread
-    suspend fun updateNotificationRule(notificationRule: NotificationRule) {
+    @Transaction
+    suspend fun updateNotificationRuleAndNotification(
+        birthday: Birthday,
+        notificationRule: NotificationRule
+    ) {
+        //clean up old notification
+        notificationDao.deleteByNotificationRuleId(notificationRule.id)
+        //generate
+        val notificationFactory = NotificationFactory()
+        val updatedNotification: Notification = notificationFactory.next(birthday, notificationRule)
+        notificationDao.insert(updatedNotification)
         return notificationRuleDao.update(notificationRule)
     }
 
@@ -83,14 +98,22 @@ class BirthdayRepository(
     suspend fun notificationRuleForBirthdayCount(birthdayId: Long): Int {
         return notificationRuleDao.count(birthdayId)
     }
-/*
+
     @Transaction
-    suspend fun insertNewNotificationRule(notificationRule: NotificationRule): Long {
+    suspend fun insertNewNotificationRuleAndGenerateFirstNotification(
+        birthday: Birthday,
+        notificationRule: NotificationRule
+    ) {
+        Timber.d("birthdayId: ${birthday.id}")
+
+        Timber.d("notificationRule.id: ${notificationRule.id}")
+        val newNotificationRuleId = notificationRuleDao.insert(notificationRule)
+        Timber.d("newNotificationRuleId: $newNotificationRuleId")
+        notificationRule.id = newNotificationRuleId
         val notificationFactory = NotificationFactory()
-        val firstNotification: Notification = notificationFactory.next(notificationRule)
+        val firstNotification: Notification = notificationFactory.next(birthday, notificationRule)
         notificationDao.insert(firstNotification)
-        return notificationRuleDao.insert(notificationRule)
-    }*/
+    }
 }
 
 class BirthdaySaveError(message: String, cause: Throwable?) : Throwable(message, cause)

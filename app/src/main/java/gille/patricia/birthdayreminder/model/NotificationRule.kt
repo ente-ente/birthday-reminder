@@ -24,7 +24,7 @@ data class NotificationRule(
     val repeat: Int,            // repeat every ... days
     val lastNotification: Int   // ... days before b
 ) {
-    fun sameAs(notificationRule: NotificationRule): Boolean {
+    fun isEqual(notificationRule: NotificationRule): Boolean {
         return (birthdayId == notificationRule.birthdayId &&
                 firstNotification == notificationRule.firstNotification &&
                 repeat == notificationRule.repeat &&

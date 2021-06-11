@@ -5,6 +5,8 @@ import gille.patricia.birthdayreminder.persistence.BirthdayReminderDatabase
 import gille.patricia.birthdayreminder.persistence.BirthdayRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import timber.log.Timber
+import timber.log.Timber.DebugTree
 
 class BirthdayApplication : Application() {
     // No need to cancel this scope as it'll be torn down with the process
@@ -19,5 +21,13 @@ class BirthdayApplication : Application() {
             database.notificationDao(),
             database.notificationRuleDao()
         )
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(DebugTree())
+        }
     }
 }

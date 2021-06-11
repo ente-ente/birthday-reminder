@@ -1,3 +1,0 @@
-package gille.patricia.birthdayreminder.workers
-
-class DeleteSentNotificationsWorker

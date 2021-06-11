@@ -60,6 +60,8 @@
             android:importantForAutofill="no"
             android:inputType="number"
             android:text="@={viewModel.daysBeforeNotification}"
+            app:error="@{viewModel.daysBeforeNotificationValidator.error}"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toStartOf="@id/guideline7"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toTopOf="@+id/guideline3" />
@@ -106,6 +108,8 @@
             android:importantForAutofill="no"
             android:inputType="number"
             android:text="@={viewModel.repeatInterval}"
+            app:error="@{viewModel.repeatIntervalValidator.error}"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toStartOf="@id/guideline7"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@+id/first_reminder" />
@@ -131,6 +135,8 @@
             android:importantForAutofill="no"
             android:inputType="number"
             android:text="@={viewModel.lastReminder}"
+            app:error="@{viewModel.lastReminderValidator.error}"
+            app:errorEnabled="true"
             app:layout_constraintEnd_toStartOf="@+id/guideline7"
             app:layout_constraintStart_toStartOf="@+id/guideline2"
             app:layout_constraintTop_toBottomOf="@+id/repeat" />
@@ -161,6 +167,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/done"
+            android:enabled="@{viewModel.isFormValidMediator}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline7"
             app:layout_constraintTop_toBottomOf="@+id/notificationActive" />
