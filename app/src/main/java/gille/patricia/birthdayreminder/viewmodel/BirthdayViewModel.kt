@@ -1,14 +1,13 @@
 package gille.patricia.birthdayreminder.viewmodel
 
-import android.text.TextUtils
 import androidx.lifecycle.*
 import gille.patricia.birthdayreminder.Birthday
 import gille.patricia.birthdayreminder.LiveDataValidator
 import gille.patricia.birthdayreminder.LiveDataValidatorResolver
 import gille.patricia.birthdayreminder.Person
 import gille.patricia.birthdayreminder.persistence.BirthdayRepository
-import gille.patricia.birthdayreminder.persistence.BirthdaySaveError
 import kotlinx.coroutines.launch
+import java.io.IOError
 import java.util.*
 
 class BirthdayViewModel(
@@ -21,9 +20,6 @@ class BirthdayViewModel(
     val yearInputValidator = LiveDataValidator(yearInput).apply {
         //Whenever the condition of the predicate is true, the error message should be emitted
         addRule("Jahr erforderlich") { it.isNullOrBlank() || it.equals("") }
-        addRule("Jahr ist ganze nichtnegative Zahl") {
-            !TextUtils.isDigitsOnly(it.toString())
-        }
         addRule("Jahr darf nicht in der Zukunft liegen") {
             try {
                 it!!.toInt() > currentYear
@@ -97,12 +93,13 @@ class BirthdayViewModel(
                             false,
                             Person(nameInput.value!!, surName.value ?: "")
                         )
-                    ) == 0) {
+                    ) == 0
+                ) {
                     _snackBar.value = "Birthday saved."
                 } else {
                     _snackBar.value = "Birthday already in database."
                 }
-            } catch (error: BirthdaySaveError) {
+            } catch (error: IOError) {
                 _snackBar.value = error.message
             } finally {
                 _spinner.value = false

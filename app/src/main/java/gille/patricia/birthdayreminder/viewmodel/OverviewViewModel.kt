@@ -62,4 +62,12 @@ class OverviewViewModel(repository: BirthdayRepository) : ViewModel() {
             }
         }
     }
+
+    fun birthdaysForCurrentMonth(): LiveData<List<Birthday>> {
+        return Transformations.map(allBirthdays) {
+            it.filter {
+                it.month == month.value
+            }
+        }
+    }
 }

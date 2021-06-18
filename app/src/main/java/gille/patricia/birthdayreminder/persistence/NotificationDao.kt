@@ -20,11 +20,17 @@ interface NotificationDao {
     fun getDueNotifications(current_date: OffsetDateTime): List<Notification>
 
     @Insert
-    suspend fun insert(notification: Notification): Long
+    suspend fun insert(notifications: List<Notification>)
 
     @Delete
     suspend fun delete(notification: Notification)
 
+    @Delete
+    suspend fun delete(notifications: List<Notification>)
+
     @Update
     suspend fun update(notification: Notification)
+
+    @Query("DELETE FROM notification WHERE id in (:ids)")
+    fun deleteByIds(ids: LongArray)
 }

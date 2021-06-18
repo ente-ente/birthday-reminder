@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
  * This is the backend. The database. This used to be done by the OpenHelper.
  * The fact that this has very few comments emphasizes its coolness.
  */
-@Database(entities = [Birthday::class, Notification::class, NotificationRule::class], version = 5)
+@Database(entities = [Birthday::class, Notification::class, NotificationRule::class], version = 6)
 @TypeConverters(Converters::class)
 abstract class BirthdayReminderDatabase : RoomDatabase() {
 

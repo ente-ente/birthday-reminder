@@ -44,10 +44,14 @@ interface BirthdayDao {
     @Query("SELECT * FROM birthday WHERE id = :id LIMIT 1")
     fun findById(id: Long): Birthday
 
+    @Query("SELECT * FROM birthday WHERE id in (:ids)")
+    fun findBirthdaysByIds(ids: List<Long>): List<Birthday>
 
     @Query("SELECT * FROM birthday ORDER BY month, day, year, name ASC")
     fun loadAllBirthdays(): LiveData<List<Birthday>>
 
     @Query("SELECT * FROM birthday WHERE day = :day AND month = :month ORDER BY year, name ASC ")
     fun birthdaysWithDayAndMonth(day: Int, month: Int): Flow<List<Birthday>>
+
+
 }

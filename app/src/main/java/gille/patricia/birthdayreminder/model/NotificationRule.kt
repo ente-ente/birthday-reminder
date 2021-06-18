@@ -25,13 +25,15 @@ data class NotificationRule(
     val lastNotification: Int   // ... days before b
 ) {
     fun isEqual(notificationRule: NotificationRule): Boolean {
-        return (birthdayId == notificationRule.birthdayId &&
+        return birthdayId == notificationRule.birthdayId &&
                 firstNotification == notificationRule.firstNotification &&
                 repeat == notificationRule.repeat &&
-                lastNotification == notificationRule.lastNotification)
+                lastNotification == notificationRule.lastNotification
     }
 
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L
     var version: Int = 0
+
+
 }

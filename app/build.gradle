@@ -26,7 +26,7 @@ android {
 
     defaultConfig {
         applicationId "gille.patricia.birthdayreminder"
-        minSdkVersion 26
+        minSdkVersion 24
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -46,6 +46,8 @@ android {
         }
     }
     compileOptions {
+        // Flag to enable support for the new language APIs
+        coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -60,6 +62,9 @@ android {
 }
 
 dependencies {
+
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
+
     implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
     implementation "androidx.activity:activity-ktx:$rootProject.activityVersion"
     implementation "androidx.core:core-ktx:$rootProject.coreKtxVersion"
@@ -95,6 +100,9 @@ dependencies {
     //WorkManager
     // Kotlin + coroutines
     implementation "androidx.work:work-runtime-ktx:$rootProject.workVersion"
+    // optional - Test helpers
+    androidTestImplementation "androidx.work:work-testing:$workVersion"
+
 
     // Debug
     implementation "com.jakewharton.timber:timber:4.7.1"

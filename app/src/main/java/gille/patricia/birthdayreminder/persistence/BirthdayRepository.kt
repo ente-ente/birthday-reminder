@@ -21,13 +21,16 @@ class BirthdayRepository(
     private val notificationRuleDao: NotificationRuleDao
 ) {
 
-    // Room executes all queries on a separate thread.
-    // Observed Flow will notify the observer when the data has changed.
     val allBirthdays: LiveData<List<Birthday>> = birthdayDao.loadAllBirthdays()
 
     @WorkerThread
     suspend fun getBirthday(id: Long): Birthday {
         return birthdayDao.findById(id)
+    }
+
+    @WorkerThread
+    suspend fun getBirthdays(ids: List<Long>): List<Birthday> {
+        return birthdayDao.findBirthdaysByIds(ids)
     }
 
     @WorkerThread
@@ -51,18 +54,8 @@ class BirthdayRepository(
     }
 
     @WorkerThread
-    suspend fun getNotification(id: Long): Notification {
-        return notificationDao.findById(id)
-    }
-
-    @WorkerThread
     suspend fun getDueNotifications(dateTime: OffsetDateTime): List<Notification> {
         return notificationDao.getDueNotifications(dateTime)
-    }
-
-    @WorkerThread
-    suspend fun insertNotification(notification: Notification): Long {
-        return notificationDao.insert(notification)
     }
 
     @WorkerThread
@@ -76,16 +69,17 @@ class BirthdayRepository(
     }
 
     @Transaction
-    suspend fun updateNotificationRuleAndNotification(
+    suspend fun updateNotificationRuleAndNotifications(
         birthday: Birthday,
         notificationRule: NotificationRule
     ) {
-        //clean up old notification
+        //clean up old notifications
         notificationDao.deleteByNotificationRuleId(notificationRule.id)
         //generate
         val notificationFactory = NotificationFactory()
-        val updatedNotification: Notification = notificationFactory.next(birthday, notificationRule)
-        notificationDao.insert(updatedNotification)
+        val updatedNotifications: List<Notification> =
+            notificationFactory.getAll(birthday, notificationRule)
+        notificationDao.insert(updatedNotifications)
         return notificationRuleDao.update(notificationRule)
     }
 
@@ -100,7 +94,7 @@ class BirthdayRepository(
     }
 
     @Transaction
-    suspend fun insertNewNotificationRuleAndGenerateFirstNotification(
+    suspend fun insertNewNotificationRuleAndGenerateNotifications(
         birthday: Birthday,
         notificationRule: NotificationRule
     ) {
@@ -111,13 +105,17 @@ class BirthdayRepository(
         Timber.d("newNotificationRuleId: $newNotificationRuleId")
         notificationRule.id = newNotificationRuleId
         val notificationFactory = NotificationFactory()
-        val firstNotification: Notification = notificationFactory.next(birthday, notificationRule)
-        notificationDao.insert(firstNotification)
+        val notifications: List<Notification> =
+            notificationFactory.getAll(birthday, notificationRule)
+        notificationDao.insert(notifications)
+    }
+
+    @WorkerThread
+    suspend fun deleteNotifications(notifications: List<Notification>) {
+        notificationDao.delete(notifications)
+    }
+
+    fun deleteNotificationsByIds(notificationIds: LongArray) {
+        notificationDao.deleteByIds(notificationIds)
     }
 }
-
-class BirthdaySaveError(message: String, cause: Throwable?) : Throwable(message, cause)
-
-class NotificationSaveError(message: String, cause: Throwable?) : Throwable(message, cause)
-
-class NotificationRuleSaveError(message: String, cause: Throwable?) : Throwable(message, cause)

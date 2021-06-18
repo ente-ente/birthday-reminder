@@ -1,6 +1,5 @@
 package gille.patricia.birthdayreminder.viewmodel
 
-import android.text.TextUtils
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,9 +19,6 @@ class NotificationRuleViewmodel(private val repository: BirthdayRepository) : Vi
     val lastReminderValidator = LiveDataValidator(lastReminder).apply {
         //Whenever the condition of the predicate is true, the error message should be emitted
         addRule("erforderlich") { it.isNullOrBlank() || it.equals("") }
-        addRule("ganze nichtnegative Zahl") {
-            !TextUtils.isDigitsOnly(it.toString())
-        }
         addRule("Anzahl Tage zu groß") {
             try {
                 it!!.toInt() > 364
@@ -35,9 +31,6 @@ class NotificationRuleViewmodel(private val repository: BirthdayRepository) : Vi
     val daysBeforeNotificationValidator = LiveDataValidator(daysBeforeNotification).apply {
         //Whenever the condition of the predicate is true, the error message should be emitted
         addRule("erforderlich") { it.isNullOrBlank() || it.equals("") }
-        addRule("ganze nichtnegative Zahl") {
-            !TextUtils.isDigitsOnly(it.toString())
-        }
         addRule("Anzahl Tage zu groß") {
             try {
                 it!!.toInt() > 364
@@ -58,9 +51,6 @@ class NotificationRuleViewmodel(private val repository: BirthdayRepository) : Vi
     val repeatIntervalValidator = LiveDataValidator(repeatInterval).apply {
         //Whenever the condition of the predicate is true, the error message should be emitted
         addRule("erforderlich") { it.isNullOrBlank() || it.equals("") }
-        addRule("ganze nichtnegative Zahl") {
-            !TextUtils.isDigitsOnly(it.toString())
-        }
         addRule("Anzahl darf nicht größer sein als Tage zwischen erster und letzter Erinnerung liegen") {
             try {
                 it!!.toInt() > daysBeforeNotification.value!!.toInt() - lastReminder.value!!.toInt()
@@ -136,7 +126,7 @@ class NotificationRuleViewmodel(private val repository: BirthdayRepository) : Vi
                 //check if something has changed
                 val oldRule = repository.findNotificationRuleById(notificationRuleId)
                 if (!oldRule.isEqual(notificationRule)) {
-                    notificationRule.version = notificationRule.version + 1
+                    notificationRule.version = oldRule.version.inc()
                     update(birthday, notificationRule)
                 }
             } else {
@@ -151,14 +141,14 @@ class NotificationRuleViewmodel(private val repository: BirthdayRepository) : Vi
     }
 
     private suspend fun insert(birthday: Birthday, notificationRule: NotificationRule) {
-        return repository.insertNewNotificationRuleAndGenerateFirstNotification(
+        return repository.insertNewNotificationRuleAndGenerateNotifications(
             birthday,
             notificationRule
         )
     }
 
     private suspend fun update(birthday: Birthday, notificationRule: NotificationRule) {
-        repository.updateNotificationRuleAndNotification(birthday, notificationRule)
+        repository.updateNotificationRuleAndNotifications(birthday, notificationRule)
     }
 
     fun initLiveData(birthdayId: Long) {

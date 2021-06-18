@@ -5,11 +5,11 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import gille.patricia.birthdayreminder.Birthday
+import gille.patricia.birthdayreminder.workers.birthdayTime
 import java.time.LocalDate
-import java.time.LocalTime
 import java.time.OffsetDateTime
 
-private val birthdayTime = LocalTime.of(0, 0, 0, 0)
+
 @Entity(
     foreignKeys = [
         ForeignKey(
@@ -33,6 +33,7 @@ data class Notification(
     val birthdayId: Long,
     val date: OffsetDateTime,
     val step: Int,
+    @ColumnInfo(index = true)
     val notificationRuleId: Long,
     val notificationRuleVersion: Int
 ) {
@@ -44,7 +45,7 @@ data class Notification(
 class NotificationFactory {
     // next heisst, dass die naechste Beachrichtigung hergestellt wird, die gefeuert wird.
     // Uebergeben wird die eben bearbeitete aus der Datenbank oder keine, falls es die erste Benachrichtigung ist.
-    fun next(
+    private fun next(
         birthday: Birthday,
         notificationRule: NotificationRule,
         currentOffsetDateTime: OffsetDateTime = OffsetDateTime.now(),
@@ -153,5 +154,21 @@ class NotificationFactory {
             }
         }
         return Pair(nextReminderDate, thisStep)
+    }
+
+    fun getAll(birthday: Birthday, notificationRule: NotificationRule): List<Notification> {
+        val currentOffsetDateTime = OffsetDateTime.now()
+        val firstNotification = next(birthday, notificationRule, currentOffsetDateTime)
+        val notifications = mutableListOf<Notification>()
+        notifications.add(firstNotification)
+        var index = 0
+        while (notifications[index].step > -1) {
+            index += 1
+            notifications.add(
+                index,
+                next(birthday, notificationRule, currentOffsetDateTime, notifications[index - 1])
+            )
+        }
+        return notifications
     }
 }

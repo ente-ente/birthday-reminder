@@ -79,8 +79,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:hint="@string/hint_year"
-                android:inputType="textAutoComplete"
                 android:minHeight="@dimen/min_height"
+                android:inputType="number"
                 android:text="@={viewModel.yearInput}"
                 android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>

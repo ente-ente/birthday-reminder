@@ -7,6 +7,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import gille.patricia.birthdayreminder.R
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class WorkerUtils {
     fun makeBirthdayNotificationsForToday(messages: List<String>, context: Context) {
@@ -39,6 +41,16 @@ class WorkerUtils {
             // Show the notification
             NotificationManagerCompat.from(context).notify(id, builder.build())
         }
+    }
+
+    fun getDaysUntilBirthday(day: Int, month: Int): Int {
+        val currentDate: LocalDate = LocalDate.now()
+        val birthday: LocalDate = LocalDate.of(currentDate.year, month, day)
+        val days = ChronoUnit.DAYS.between(currentDate, birthday)
+        if (days < 0) {
+            return ChronoUnit.DAYS.between(currentDate, birthday.plusYears(1L)).toInt()
+        }
+        return days.toInt()
     }
 
 }
