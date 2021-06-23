@@ -45,35 +45,58 @@ data class Notification(
 class NotificationFactory {
     // next heisst, dass die naechste Beachrichtigung hergestellt wird, die gefeuert wird.
     // Uebergeben wird die eben bearbeitete aus der Datenbank oder keine, falls es die erste Benachrichtigung ist.
-    private fun next(
+
+    fun next(
         birthday: Birthday,
         notificationRule: NotificationRule,
-        currentOffsetDateTime: OffsetDateTime = OffsetDateTime.now(),
-        notification: Notification? = null
+        notification: Notification? = null,
+        currentOffsetDateTime: OffsetDateTime = OffsetDateTime.now()
+    ): Notification {
+        return next(
+            birthday.id,
+            birthday.day,
+            birthday.month,
+            notificationRule,
+            notification?.step ?: -1,
+            notification?.notificationRuleId ?: -1,
+            notification?.notificationRuleVersion ?: -1,
+            currentOffsetDateTime
+        )
+    }
+
+    fun next(
+        birthdayId: Long,
+        birthdayDay: Int,
+        birthdayMonth: Int,
+        notificationRule: NotificationRule,
+        lastStep: Int = -1,
+        lastNotificationRuleId: Long = -1,
+        lastNotificationRuleVersion: Int = -1,
+        currentOffsetDateTime: OffsetDateTime = OffsetDateTime.now()
     ): Notification {
 
         val lastReminderDate = getLastReminderForNextBirthday(
-            birthday.day, birthday.month, notificationRule.lastNotification, currentOffsetDateTime
+            birthdayDay, birthdayMonth, notificationRule.lastNotification, currentOffsetDateTime
         )
 
         val lastNotificationStep =
         // falls es die erste Benachrichtigung zu einem Geburtstag ist
         // oder der User seine Benachrichtigungseinstellung
             // geaendert hat
-            if (notification == null || notificationRule.id != notification.notificationRuleId
-                || notificationRule.version != notification.notificationRuleVersion
+            if (notificationRule.id != lastNotificationRuleId
+                || notificationRule.version != lastNotificationRuleVersion
             ) {
                 -1
                 // andernfalls kann die Variable step aus der letzten Benachrichtigung verwendet werden,
                 // um die naechste Benachrichtigung zu generieren
             } else {
-                notification.step
+                lastStep
             }
 
         var (notificationDate, newNotificationStep) =
             getNextReminderForNextBirthday(
-                birthday.day,
-                birthday.month,
+                birthdayDay,
+                birthdayMonth,
                 lastNotificationStep,
                 notificationRule,
                 currentOffsetDateTime
@@ -87,13 +110,14 @@ class NotificationFactory {
             newNotificationStep = -1
         }
         return Notification(
-            birthday.id,
+            birthdayId,
             notificationDate,
             newNotificationStep,
             notificationRule.id,
             notificationRule.version
         )
     }
+
 
     private fun getLastReminderForNextBirthday(
         bdDay: Int,
@@ -158,7 +182,7 @@ class NotificationFactory {
 
     fun getAll(birthday: Birthday, notificationRule: NotificationRule): List<Notification> {
         val currentOffsetDateTime = OffsetDateTime.now()
-        val firstNotification = next(birthday, notificationRule, currentOffsetDateTime)
+        val firstNotification = next(birthday, notificationRule, null, currentOffsetDateTime)
         val notifications = mutableListOf<Notification>()
         notifications.add(firstNotification)
         var index = 0
@@ -166,7 +190,7 @@ class NotificationFactory {
             index += 1
             notifications.add(
                 index,
-                next(birthday, notificationRule, currentOffsetDateTime, notifications[index - 1])
+                next(birthday, notificationRule, notifications[index - 1], currentOffsetDateTime)
             )
         }
         return notifications

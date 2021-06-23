@@ -1,5 +1,6 @@
 package gille.patricia.birthdayreminder.workers
 
+/*
 import android.content.Context
 import androidx.work.*
 
@@ -22,4 +23,4 @@ class TriggerWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params
         continuation.enqueue()
         return Result.success()
     }
-}
+}*/

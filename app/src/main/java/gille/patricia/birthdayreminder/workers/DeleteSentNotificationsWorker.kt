@@ -1,4 +1,5 @@
 package gille.patricia.birthdayreminder.workers
+/*
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -33,6 +34,7 @@ class DeleteSentNotificationsWorker(appContext: Context, workerParams: WorkerPar
         if (notificationIds == null || notificationIds.isEmpty()) {
             return Result.failure()
         }
+
         try {
             // Delete sent notifications
             repository.deleteNotificationsByIds(notificationIds)
@@ -43,4 +45,4 @@ class DeleteSentNotificationsWorker(appContext: Context, workerParams: WorkerPar
         // Indicate whether the work finished successfully with the Result
         return Result.success()
     }
-}
+}*/

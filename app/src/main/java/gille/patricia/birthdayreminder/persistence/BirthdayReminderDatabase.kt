@@ -10,6 +10,7 @@ import gille.patricia.birthdayreminder.Birthday
 import gille.patricia.birthdayreminder.Person
 import gille.patricia.birthdayreminder.model.Notification
 import gille.patricia.birthdayreminder.model.NotificationRule
+import gille.patricia.birthdayreminder.model.NotificationWithNotificationRuleAndBirthday
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -18,13 +19,17 @@ import kotlinx.coroutines.launch
  * This is the backend. The database. This used to be done by the OpenHelper.
  * The fact that this has very few comments emphasizes its coolness.
  */
-@Database(entities = [Birthday::class, Notification::class, NotificationRule::class], version = 6)
+@Database(
+    entities = [Birthday::class, Notification::class, NotificationRule::class],
+    views = [NotificationWithNotificationRuleAndBirthday::class], version = 9
+)
 @TypeConverters(Converters::class)
 abstract class BirthdayReminderDatabase : RoomDatabase() {
 
     abstract fun birthdayDao(): BirthdayDao
     abstract fun notificationDao(): NotificationDao
     abstract fun notificationRuleDao(): NotificationRuleDao
+    abstract fun notificationWithNotificationRuleAndBirthdayDao(): NotificationWithNotificationRuleAndBirthdayDao
 
     companion object {
         @Volatile

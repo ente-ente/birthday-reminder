@@ -1,4 +1,5 @@
 package gille.patricia.birthdayreminder.workers
+/*
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -59,6 +60,8 @@ class SendBirthdayNotificationsWorker(appContext: Context, workerParams: WorkerP
                 } Tagen Geburtstag."
             }
 
+
+
         // Use makeBirthdayNotificationsForToday to send notifications
         workerUtils.makeBirthdayNotificationsForToday(birthdayMessages, applicationContext)
 
@@ -67,4 +70,6 @@ class SendBirthdayNotificationsWorker(appContext: Context, workerParams: WorkerP
         return Result.success(output)
     }
 
+
 }
+*/

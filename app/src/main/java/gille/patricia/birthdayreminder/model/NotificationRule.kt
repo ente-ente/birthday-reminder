@@ -34,6 +34,4 @@ data class NotificationRule(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0L
     var version: Int = 0
-
-
 }

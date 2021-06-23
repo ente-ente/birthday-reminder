@@ -1,18 +1,6 @@
 package gille.patricia.birthdayreminder.workers
 
-import android.content.Context
-import androidx.work.CoroutineWorker
-import androidx.work.Data
-import androidx.work.WorkerParameters
-import androidx.work.workDataOf
-import gille.patricia.birthdayreminder.model.Notification
-import gille.patricia.birthdayreminder.persistence.BirthdayReminderDatabase.Companion.getDatabase
-import gille.patricia.birthdayreminder.persistence.BirthdayRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import timber.log.Timber
-import java.io.IOError
-import java.time.OffsetDateTime
+/*
 
 class RetrieveCurrentNotificationsWorker(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
@@ -51,9 +39,9 @@ class RetrieveCurrentNotificationsWorker(appContext: Context, workerParams: Work
         val output: Data = workDataOf(
             KEY_BIRTHDAY_IDS to birthdayIds.toTypedArray(),
             KEY_NOTIFICATION_IDS to notificationIds.toTypedArray(),
-            KEY_NUMBER_OF_NOTIFICATIONS to notificationIds.size
+            KEY_NUMBER_OF_NOTIFICATIONS to notificationIds.size,
         )
         return Result.success(output)
-
     }
 }
+*/

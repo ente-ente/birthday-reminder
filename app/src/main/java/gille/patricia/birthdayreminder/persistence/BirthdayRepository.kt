@@ -7,9 +7,12 @@ import gille.patricia.birthdayreminder.Birthday
 import gille.patricia.birthdayreminder.model.Notification
 import gille.patricia.birthdayreminder.model.NotificationFactory
 import gille.patricia.birthdayreminder.model.NotificationRule
+import gille.patricia.birthdayreminder.model.NotificationWithNotificationRuleAndBirthday
 import kotlinx.coroutines.flow.Flow
+
 import timber.log.Timber
 import java.time.OffsetDateTime
+
 
 /**
  * Abstracted Repository as promoted by the Architecture Guide.
@@ -18,7 +21,8 @@ import java.time.OffsetDateTime
 class BirthdayRepository(
     private val birthdayDao: BirthdayDao,
     private val notificationDao: NotificationDao,
-    private val notificationRuleDao: NotificationRuleDao
+    private val notificationRuleDao: NotificationRuleDao,
+    private val notificationWithNotificationRuleAndBirthdayDao: NotificationWithNotificationRuleAndBirthdayDao
 ) {
 
     val allBirthdays: LiveData<List<Birthday>> = birthdayDao.loadAllBirthdays()
@@ -27,6 +31,7 @@ class BirthdayRepository(
     suspend fun getBirthday(id: Long): Birthday {
         return birthdayDao.findById(id)
     }
+
 
     @WorkerThread
     suspend fun getBirthdays(ids: List<Long>): List<Birthday> {
@@ -111,11 +116,25 @@ class BirthdayRepository(
     }
 
     @WorkerThread
+    suspend fun deleteNotification(notification: Notification) {
+        notificationDao.delete(notification)
+    }
+
+    @WorkerThread
     suspend fun deleteNotifications(notifications: List<Notification>) {
         notificationDao.delete(notifications)
     }
 
+    @WorkerThread
     fun deleteNotificationsByIds(notificationIds: LongArray) {
         notificationDao.deleteByIds(notificationIds)
     }
+
+    @WorkerThread
+    suspend fun getNotificationData(currentDateTime: OffsetDateTime): NotificationWithNotificationRuleAndBirthday {
+        return notificationWithNotificationRuleAndBirthdayDao.getNotificationWithBirthdayAndNotificationRule(
+            currentDateTime
+        )
+    }
 }
+

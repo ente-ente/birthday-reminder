@@ -20,5 +20,4 @@ const val KEY_NOTIFICATION_IDS = "notificationIds"
 const val KEY_NUMBER_OF_NOTIFICATIONS = "numberOfNotifications"
 const val KEY_BIRTHDAY_IDS = "birthdayIds"
 const val BIRTHDAY_NOTIFICATION_WORK_NAME = "Notify current birthdays"
-
 val birthdayTime = LocalTime.of(0, 0, 0, 0)
