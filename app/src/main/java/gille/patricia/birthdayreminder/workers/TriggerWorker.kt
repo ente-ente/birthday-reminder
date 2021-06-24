@@ -1,6 +1,6 @@
 package gille.patricia.birthdayreminder.workers
 
-/*
+
 import android.content.Context
 import androidx.work.*
 
@@ -16,11 +16,11 @@ class TriggerWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, params
             .beginUniqueWork(
                 BIRTHDAY_NOTIFICATION_WORK_NAME,
                 ExistingWorkPolicy.REPLACE,
-                OneTimeWorkRequest.from(RetrieveCurrentNotificationsWorker::class.java)
-            ).then(OneTimeWorkRequest.from(SendBirthdayNotificationsWorker::class.java)).then(
+                OneTimeWorkRequest.from(SendBirthdayRemindersWorker::class.java)
+            ).then(
                 OneTimeWorkRequest.from(DeleteSentNotificationsWorker::class.java)
             )
         continuation.enqueue()
         return Result.success()
     }
-}*/
+}

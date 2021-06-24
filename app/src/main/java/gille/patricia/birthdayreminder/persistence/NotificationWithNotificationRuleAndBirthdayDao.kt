@@ -11,7 +11,7 @@ interface NotificationWithNotificationRuleAndBirthdayDao {
         "SELECT * FROM notificationWithNotificationRuleAndBirthday " +
                 "WHERE notificationDate <= :currentDate"
     )
-    suspend fun getNotificationWithBirthdayAndNotificationRule(currentDate: OffsetDateTime): NotificationWithNotificationRuleAndBirthday
+    suspend fun getNotificationWithBirthdayAndNotificationRule(currentDate: OffsetDateTime): List<NotificationWithNotificationRuleAndBirthday>
 
 
 }

@@ -9,9 +9,9 @@ class ViewModelFactory(private val repository: BirthdayRepository) : ViewModelPr
         if (modelClass.isAssignableFrom(OverviewViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return OverviewViewModel(repository) as T
-        } else if (modelClass.isAssignableFrom(NotificationRuleViewmodel::class.java)) {
+        } else if (modelClass.isAssignableFrom(NotificationRuleViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return NotificationRuleViewmodel(repository) as T
+            return NotificationRuleViewModel(repository) as T
         } else if (modelClass.isAssignableFrom(BirthdayViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return BirthdayViewModel(repository) as T

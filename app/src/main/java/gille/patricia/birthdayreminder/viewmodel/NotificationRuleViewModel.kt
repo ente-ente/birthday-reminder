@@ -12,7 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class NotificationRuleViewmodel(private val repository: BirthdayRepository) : ViewModel() {
+class NotificationRuleViewModel(private val repository: BirthdayRepository) : ViewModel() {
 
     val birthdayId = MutableLiveData<Long>()
     val lastReminder = MutableLiveData<String>()
@@ -141,14 +141,14 @@ class NotificationRuleViewmodel(private val repository: BirthdayRepository) : Vi
     }
 
     private suspend fun insert(birthday: Birthday, notificationRule: NotificationRule) {
-        return repository.insertNewNotificationRuleAndGenerateNotifications(
+        return repository.insertNewNotificationRuleAndGenerateNotification(
             birthday,
             notificationRule
         )
     }
 
     private suspend fun update(birthday: Birthday, notificationRule: NotificationRule) {
-        repository.updateNotificationRuleAndNotifications(birthday, notificationRule)
+        repository.updateNotificationRuleAndNotification(birthday, notificationRule)
     }
 
     fun initLiveData(birthdayId: Long) {

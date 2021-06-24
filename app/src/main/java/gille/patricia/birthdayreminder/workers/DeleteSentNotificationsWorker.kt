@@ -1,25 +1,17 @@
 package gille.patricia.birthdayreminder.workers
-/*
 
+
+import android.app.Application
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import gille.patricia.birthdayreminder.persistence.BirthdayReminderDatabase
-import gille.patricia.birthdayreminder.persistence.BirthdayRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import gille.patricia.birthdayreminder.BirthdayApplication
 import timber.log.Timber
 import java.io.IOError
 
 class DeleteSentNotificationsWorker(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
-    private val applicationScope = CoroutineScope(Dispatchers.IO)
-    val database = BirthdayReminderDatabase.getDatabase(applicationContext, applicationScope)
-    private val repository = BirthdayRepository(
-        database.birthdayDao(),
-        database.notificationDao(),
-        database.notificationRuleDao()
-    )
+    private val repository = (Application() as BirthdayApplication).birthdayRepository
 
     companion object {
         const val WORK_NAME =
@@ -45,4 +37,4 @@ class DeleteSentNotificationsWorker(appContext: Context, workerParams: WorkerPar
         // Indicate whether the work finished successfully with the Result
         return Result.success()
     }
-}*/
+}

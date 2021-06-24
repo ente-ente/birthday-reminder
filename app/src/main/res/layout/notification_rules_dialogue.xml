@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="gille.patricia.birthdayreminder.viewmodel.NotificationRuleViewmodel" />
+            type="gille.patricia.birthdayreminder.viewmodel.NotificationRuleViewModel" />
     </data>
 
 

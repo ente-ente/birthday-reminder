@@ -9,7 +9,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import gille.patricia.birthdayreminder.BirthdayApplication
 import gille.patricia.birthdayreminder.databinding.NotificationRulesDialogueBinding
-import gille.patricia.birthdayreminder.viewmodel.NotificationRuleViewmodel
+import gille.patricia.birthdayreminder.viewmodel.NotificationRuleViewModel
 import gille.patricia.birthdayreminder.viewmodel.ViewModelFactory
 
 class NotificationRulesDialogue : BottomSheetDialogFragment() {
@@ -28,18 +28,18 @@ class NotificationRulesDialogue : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val notificationRuleViewmodel: NotificationRuleViewmodel by activityViewModels {
+        val notificationRuleViewModel: NotificationRuleViewModel by activityViewModels {
             ViewModelFactory(
                 (requireActivity().application as BirthdayApplication)
                     .birthdayRepository
             )
         }
-        binding.viewModel = notificationRuleViewmodel
+        binding.viewModel = notificationRuleViewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        notificationRuleViewmodel.initLiveData(args.birthdayId)
+        notificationRuleViewModel.initLiveData(args.birthdayId)
 
         binding.doneButton.setOnClickListener {
-            notificationRuleViewmodel.saveRule()
+            notificationRuleViewModel.saveRule()
             dismiss()
         }
 

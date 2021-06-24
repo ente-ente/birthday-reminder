@@ -8,8 +8,6 @@ import gille.patricia.birthdayreminder.model.Notification
 import gille.patricia.birthdayreminder.model.NotificationFactory
 import gille.patricia.birthdayreminder.model.NotificationRule
 import gille.patricia.birthdayreminder.model.NotificationWithNotificationRuleAndBirthday
-import kotlinx.coroutines.flow.Flow
-
 import timber.log.Timber
 import java.time.OffsetDateTime
 
@@ -30,17 +28,6 @@ class BirthdayRepository(
     @WorkerThread
     suspend fun getBirthday(id: Long): Birthday {
         return birthdayDao.findById(id)
-    }
-
-
-    @WorkerThread
-    suspend fun getBirthdays(ids: List<Long>): List<Birthday> {
-        return birthdayDao.findBirthdaysByIds(ids)
-    }
-
-    @WorkerThread
-    fun getBirthdaysForDay(day: Int, month: Int): Flow<List<Birthday>> {
-        return birthdayDao.birthdaysWithDayAndMonth(day, month)
     }
 
     @WorkerThread
@@ -74,7 +61,7 @@ class BirthdayRepository(
     }
 
     @Transaction
-    suspend fun updateNotificationRuleAndNotifications(
+    suspend fun updateNotificationRuleAndNotification(
         birthday: Birthday,
         notificationRule: NotificationRule
     ) {
@@ -82,9 +69,9 @@ class BirthdayRepository(
         notificationDao.deleteByNotificationRuleId(notificationRule.id)
         //generate
         val notificationFactory = NotificationFactory()
-        val updatedNotifications: List<Notification> =
-            notificationFactory.getAll(birthday, notificationRule)
-        notificationDao.insert(updatedNotifications)
+        val updatedNotification =
+            notificationFactory.next(birthday, notificationRule)
+        insertNewNotification(updatedNotification)
         return notificationRuleDao.update(notificationRule)
     }
 
@@ -99,7 +86,7 @@ class BirthdayRepository(
     }
 
     @Transaction
-    suspend fun insertNewNotificationRuleAndGenerateNotifications(
+    suspend fun insertNewNotificationRuleAndGenerateNotification(
         birthday: Birthday,
         notificationRule: NotificationRule
     ) {
@@ -110,14 +97,19 @@ class BirthdayRepository(
         Timber.d("newNotificationRuleId: $newNotificationRuleId")
         notificationRule.id = newNotificationRuleId
         val notificationFactory = NotificationFactory()
-        val notifications: List<Notification> =
-            notificationFactory.getAll(birthday, notificationRule)
-        notificationDao.insert(notifications)
+        val notification =
+            notificationFactory.next(birthday, notificationRule)
+        insertNewNotification(notification)
     }
 
     @WorkerThread
-    suspend fun deleteNotification(notification: Notification) {
-        notificationDao.delete(notification)
+    suspend fun insertNewNotification(notification: Notification) {
+        notificationDao.insert(listOf(notification))
+    }
+
+    @WorkerThread
+    suspend fun insertNewNotifications(notifications: List<Notification>) {
+        notificationDao.insert(notifications)
     }
 
     @WorkerThread
@@ -131,7 +123,7 @@ class BirthdayRepository(
     }
 
     @WorkerThread
-    suspend fun getNotificationData(currentDateTime: OffsetDateTime): NotificationWithNotificationRuleAndBirthday {
+    suspend fun getNotificationData(currentDateTime: OffsetDateTime): List<NotificationWithNotificationRuleAndBirthday> {
         return notificationWithNotificationRuleAndBirthdayDao.getNotificationWithBirthdayAndNotificationRule(
             currentDateTime
         )
