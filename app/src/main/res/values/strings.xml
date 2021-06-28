@@ -34,6 +34,11 @@
     <string name="days_repeat_after_text">Tage wiederholen</string>
     <string name="all">Alle</string>
     <string name="notificationActive">Benachrichtigung wird gesendet</string>
+    <string name="defaultChannel">Birthday Reminder default channel</string>
+    <string name="notificationDescription">Notifications from Birthday Reminder</string>
+    <string name="deepLinkNotificationTitle">Geburtstagsalarm</string>
+    <string name="edit_notification">Benachrichtigungseinstellungen</string>
+    <string name="nextReminderDate">Nächste Erinnerung:</string>
     <string-array name="months">
         <item>Januar</item>
         <item>Februar</item>

@@ -1,43 +1,50 @@
 package gille.patricia.birthdayreminder.workers
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
-import android.os.Build
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+import androidx.navigation.NavDeepLinkBuilder
 import gille.patricia.birthdayreminder.R
+import gille.patricia.birthdayreminder.model.NotificationWithNotificationRuleAndBirthday
+import gille.patricia.birthdayreminder.view.BirthdayDetailsFragmentArgs
+import gille.patricia.birthdayreminder.view.NotificationRulesDialogueArgs
+import java.time.OffsetDateTime
 
 class WorkerUtils {
-    fun makeBirthdayNotificationsForToday(messages: List<String>, context: Context) {
-        // Make a channel if necessary
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create the NotificationChannel, but only on API 26+ because
-            // the NotificationChannel class is new and not in the support library
-            val name = BIRTHDAY_NOTIFICATION_CHANNEL_NAME
-            val description = BIRTHDAY_NOTIFICATION_CHANNEL_DESCRIPTION
-            val importance = NotificationManager.IMPORTANCE_HIGH
-            val channel = NotificationChannel(CHANNEL_ID, name, importance)
-            channel.description = description
+    fun makeBirthdayNotificationsForToday(
+        reminderData: List<NotificationWithNotificationRuleAndBirthday>,
+        context: Context
+    ) {
 
-            // Add the channel
-            val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+        var id = 0L
+        val currentDate = OffsetDateTime.now()
+        for (reminder in reminderData) {
+            val message =
+                "${reminder.name} hat in  ${
+                    reminder.getDaysUntilNextBirthday(
+                        currentDate.toLocalDate()
+                    )
+                } Tagen Geburtstag."
 
-            notificationManager?.createNotificationChannel(channel)
-        }
-        var id = -1
-        for (message in messages) {
-            // Create the notification
-            val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(NOTIFICATION_TITLE)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setVibrate(LongArray(0))
+            val birthdayDetailsIntent: PendingIntent = NavDeepLinkBuilder(context)
+                .setGraph(R.navigation.nav_graph)
+                .setDestination(R.id.birthdayDetailsFragment)
+                .setArguments(BirthdayDetailsFragmentArgs(reminder.birthdayId).toBundle())
+                .createPendingIntent()
+
+            val editNotificationIntent: PendingIntent = NavDeepLinkBuilder(context)
+                .setGraph(R.navigation.nav_graph)
+                .setDestination(R.id.notificationRulesDialogue)
+                .setArguments(NotificationRulesDialogueArgs(reminder.birthdayId).toBundle())
+                .createPendingIntent()
+
+            Notifier.postNotification(
+                id,
+                context,
+                birthdayDetailsIntent,
+                editNotificationIntent,
+                message
+            )
             id += 1
-            // Show the notification
-            NotificationManagerCompat.from(context).notify(id, builder.build())
         }
     }
 }

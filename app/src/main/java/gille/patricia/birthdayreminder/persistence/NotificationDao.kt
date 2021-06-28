@@ -13,6 +13,9 @@ interface NotificationDao {
     @Query("SELECT * FROM notification WHERE birthdayId = :birthdayId")
     fun findByBirthdayId(birthdayId: Long): List<Notification>
 
+    @Query("SELECT * FROM notification WHERE birthdayId = :birthdayId ORDER BY date ASC LIMIT 1")
+    fun nextNotificationByBirthdayId(birthdayId: Long): Notification
+
     @Query("DELETE FROM notification WHERE notificationRuleId = :notificationRuleId")
     fun deleteByNotificationRuleId(notificationRuleId: Long)
 

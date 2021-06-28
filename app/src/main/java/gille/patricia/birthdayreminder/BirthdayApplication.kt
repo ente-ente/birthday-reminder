@@ -55,7 +55,7 @@ class BirthdayApplication : Application() {
             .setConstraints(constraints)
             .build()
 
-        Timber.d("WorkManager: Periodic Work request for sync is scheduled")
+        Timber.d("WorkManager: Periodic Work request for birthday notifications is scheduled")
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
             TriggerWorker.WORK_NAME,
             ExistingPeriodicWorkPolicy.KEEP,

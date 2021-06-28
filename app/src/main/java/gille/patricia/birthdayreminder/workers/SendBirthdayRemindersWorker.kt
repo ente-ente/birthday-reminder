@@ -37,16 +37,12 @@ class SendBirthdayRemindersWorker(appContext: Context, workerParams: WorkerParam
             return Result.success()
         }
 
-        val messages = reminderData.filter { it.notificationActive }
-            .map {
-                "${it.name} hat in  ${
-                    it.getDaysUntilNextBirthday(
-                        currentDate.toLocalDate()
-                    )
-                } Tagen Geburtstag."
-            }
 
-        WorkerUtils().makeBirthdayNotificationsForToday(messages, applicationContext)
+
+        WorkerUtils().makeBirthdayNotificationsForToday(
+            reminderData.filter { it.notificationActive },
+            applicationContext
+        )
 
         val notificationFactory = (Application() as BirthdayApplication).notificationFactory
 

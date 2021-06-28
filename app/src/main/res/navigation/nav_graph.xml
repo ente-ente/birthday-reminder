@@ -50,7 +50,7 @@
             app:destination="@id/addBirthdayFragment" />
         <action
             android:id="@+id/action_dayFragment_to_birthdaySettingsDialogue"
-            app:destination="@id/birthdaySettingsDialogue" />
+            app:destination="@id/notificationRulesDialogue" />
     </fragment>
     <fragment
         android:id="@+id/addBirthdayFragment"
@@ -75,12 +75,27 @@
             app:popUpToInclusive="true" />
     </fragment>
     <dialog
-        android:id="@+id/birthdaySettingsDialogue"
+        android:id="@+id/notificationRulesDialogue"
         android:name="gille.patricia.birthdayreminder.view.NotificationRulesDialogue"
-        android:label="BirthdaySettingsDialogue">
+        android:label="NotificationRulesDialogue">
         <argument
             android:name="birthdayId"
             android:defaultValue="-1L"
             app:argType="long" />
+        <deepLink
+            android:id="@+id/deepLink2"
+            app:uri="myapp://navbirthdayreminder.com/notificationrulesdialogue" />
     </dialog>
+    <fragment
+        android:id="@+id/birthdayDetailsFragment"
+        android:name="gille.patricia.birthdayreminder.view.BirthdayDetailsFragment"
+        android:label="BirthdayDetailsFragment">
+        <deepLink
+            android:id="@+id/deepLink"
+            app:uri="myapp://navbirthdayreminder.com/birthdaydetails" />
+        <argument
+            android:name="birthdayId"
+            android:defaultValue="-1L"
+            app:argType="long" />
+    </fragment>
 </navigation>

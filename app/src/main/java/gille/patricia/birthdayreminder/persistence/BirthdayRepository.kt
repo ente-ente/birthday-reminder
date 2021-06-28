@@ -24,6 +24,7 @@ class BirthdayRepository(
 ) {
 
     val allBirthdays: LiveData<List<Birthday>> = birthdayDao.loadAllBirthdays()
+    private val notificationFactory = NotificationFactory()
 
     @WorkerThread
     suspend fun getBirthday(id: Long): Birthday {
@@ -51,6 +52,11 @@ class BirthdayRepository(
     }
 
     @WorkerThread
+    suspend fun getNextNotificationByBirthdayId(birthdayId: Long): Notification {
+        return notificationDao.nextNotificationByBirthdayId(birthdayId)
+    }
+
+    @WorkerThread
     suspend fun getNotificationRule(birthdayId: Long): NotificationRule {
         return notificationRuleDao.getForBirthdayId(birthdayId)
     }
@@ -68,7 +74,6 @@ class BirthdayRepository(
         //clean up old notifications
         notificationDao.deleteByNotificationRuleId(notificationRule.id)
         //generate
-        val notificationFactory = NotificationFactory()
         val updatedNotification =
             notificationFactory.next(birthday, notificationRule)
         insertNewNotification(updatedNotification)
@@ -96,7 +101,7 @@ class BirthdayRepository(
         val newNotificationRuleId = notificationRuleDao.insert(notificationRule)
         Timber.d("newNotificationRuleId: $newNotificationRuleId")
         notificationRule.id = newNotificationRuleId
-        val notificationFactory = NotificationFactory()
+
         val notification =
             notificationFactory.next(birthday, notificationRule)
         insertNewNotification(notification)

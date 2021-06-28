@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
  */
 @Database(
     entities = [Birthday::class, Notification::class, NotificationRule::class],
-    views = [NotificationWithNotificationRuleAndBirthday::class], version = 9
+    views = [NotificationWithNotificationRuleAndBirthday::class], version = 10
 )
 @TypeConverters(Converters::class)
 abstract class BirthdayReminderDatabase : RoomDatabase() {

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import gille.patricia.birthdayreminder.Birthday
 import gille.patricia.birthdayreminder.LiveDataValidator
 import gille.patricia.birthdayreminder.LiveDataValidatorResolver
+import gille.patricia.birthdayreminder.model.NotificationFactory
 import gille.patricia.birthdayreminder.model.NotificationRule
 import gille.patricia.birthdayreminder.persistence.BirthdayRepository
 import kotlinx.coroutines.CoroutineScope
@@ -13,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class NotificationRuleViewModel(private val repository: BirthdayRepository) : ViewModel() {
-
+    val notificationFactory = NotificationFactory()
     val birthdayId = MutableLiveData<Long>()
     val lastReminder = MutableLiveData<String>()
     val lastReminderValidator = LiveDataValidator(lastReminder).apply {
@@ -30,7 +31,7 @@ class NotificationRuleViewModel(private val repository: BirthdayRepository) : Vi
     val daysBeforeNotification = MutableLiveData<String>()
     val daysBeforeNotificationValidator = LiveDataValidator(daysBeforeNotification).apply {
         //Whenever the condition of the predicate is true, the error message should be emitted
-        addRule("erforderlich") { it.isNullOrBlank() || it.equals("") }
+        addRule("erforderlich") { it.isNullOrBlank() || it == "" }
         addRule("Anzahl Tage zu groß") {
             try {
                 it!!.toInt() > 364
@@ -59,6 +60,8 @@ class NotificationRuleViewModel(private val repository: BirthdayRepository) : Vi
             }
         }
     }
+
+    val nextReminderDate = MutableLiveData<String>()
 
 
     val isFormValidMediator = MediatorLiveData<Boolean>()
@@ -99,16 +102,22 @@ class NotificationRuleViewModel(private val repository: BirthdayRepository) : Vi
             if (notificationRuleExistsForBirthday(birthdayId)) {
                 notificationRule = repository.getNotificationRule(birthdayId)
                 notificationRuleId = notificationRule.id
+                nextReminderDate.postValue(
+                    repository.getNextNotificationByBirthdayId(birthdayId).date.toLocalDate()
+                        .toString()
+                )
             } else {
                 notificationRule = NotificationRule(birthdayId, 0, 0, 0)
+                nextReminderDate.postValue("Kein Wert")
             }
+
             daysBeforeNotification.postValue(notificationRule.firstNotification.toString())
             repeatInterval.postValue(notificationRule.repeat.toString())
             lastReminder.postValue(notificationRule.lastNotification.toString())
         }
     }
 
-    fun saveRule() {
+    fun saveRule(setupNotification: (Long, String) -> Unit) {
         val notificationRule =
             NotificationRule(
                 birthdayId.value!!,
@@ -132,7 +141,14 @@ class NotificationRuleViewModel(private val repository: BirthdayRepository) : Vi
             } else {
                 notificationRule.version = 1
                 insert(birthday, notificationRule)
+
             }
+
+            nextReminderDate.postValue(
+                repository.getNextNotificationByBirthdayId(birthdayId.value!!).date.toLocalDate()
+                    .toString()
+            )
+            setupNotification(birthdayId.value!!, "Test notification")
         }
     }
 
