@@ -44,7 +44,7 @@ class NotificationRulesDialogue : BottomSheetDialogFragment() {
         notificationRuleViewModel.initLiveData(args.birthdayId)
 
         binding.doneButton.setOnClickListener {
-            notificationRuleViewModel.saveRule { birthdayId, message ->
+            notificationRuleViewModel.saveChanges { birthdayId, message ->
                 val birthdayDetailsIntent: PendingIntent = NavDeepLinkBuilder(context)
                     .setGraph(R.navigation.nav_graph)
                     .setDestination(R.id.birthdayDetailsFragment)

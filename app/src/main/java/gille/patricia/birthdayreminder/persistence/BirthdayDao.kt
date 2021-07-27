@@ -28,13 +28,6 @@ interface BirthdayDao {
         return -1
     }
 
-    @Transaction
-    suspend fun toggleNotification(birthdayId: Long, notificationActive: Boolean) {
-        val birthday = findById(birthdayId)
-        birthday.notificationActive = notificationActive
-        update(birthday)
-    }
-
     @Update
     suspend fun update(birthday: Birthday)
 

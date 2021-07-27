@@ -141,8 +141,10 @@ class NotificationFactory {
         notificationRule: NotificationRule,
         currentOffsetDateTime: OffsetDateTime
     ): Pair<OffsetDateTime, Int> {
-        val birthday: LocalDate = LocalDate.of(currentOffsetDateTime.year, bdMonth, bdDay)
-
+        var nextBirthday: LocalDate = LocalDate.of(currentOffsetDateTime.year, bdMonth, bdDay)
+        if (nextBirthday <= currentOffsetDateTime.toLocalDate()) {
+            nextBirthday = nextBirthday.plusYears(1L)
+        }
         val periodForRepeat: Int =
             notificationRule.firstNotification - notificationRule.lastNotification
         if (periodForRepeat == 0) {
@@ -162,12 +164,13 @@ class NotificationFactory {
             notificationRule.repeat
         }
         var nextReminderDate = OffsetDateTime.MIN
-        val start = birthday.minusDays(notificationRule.firstNotification.toLong())
+        val start = nextBirthday.minusDays(notificationRule.firstNotification.toLong())
+
         val repetitions: Int = periodForRepeat / repeatEvery
         var thisStep: Int = -1
         for (newStep in (step + 1)..repetitions) {
             val date = start.plusDays(newStep * repeatEvery.toLong())
-            if (date.isAfter(currentOffsetDateTime.toLocalDate()) && date.isBefore(birthday)) {
+            if (date.isAfter(currentOffsetDateTime.toLocalDate()) && date.isBefore(nextBirthday)) {
                 nextReminderDate = OffsetDateTime.of(
                     date,
                     birthdayTime,

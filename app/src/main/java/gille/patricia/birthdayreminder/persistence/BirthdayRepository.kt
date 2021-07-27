@@ -71,18 +71,17 @@ class BirthdayRepository(
         birthday: Birthday,
         notificationRule: NotificationRule
     ) {
-        //clean up old notifications
-        notificationDao.deleteByNotificationRuleId(notificationRule.id)
-        //generate
-        val updatedNotification =
-            notificationFactory.next(birthday, notificationRule)
-        insertNewNotification(updatedNotification)
-        return notificationRuleDao.update(notificationRule)
-    }
-
-    @WorkerThread
-    suspend fun toggleNotification(birthdayId: Long, notificationActive: Boolean) {
-        return birthdayDao.toggleNotification(birthdayId, notificationActive)
+        //check if something has changed
+        val oldRule = findNotificationRuleById(notificationRule.id)
+        if (!oldRule.isEqual(notificationRule)) {
+            notificationRule.version = oldRule.version.inc()
+            notificationRuleDao.update(notificationRule)
+            //clean up old notification(s)
+            notificationDao.deleteByNotificationRuleId(notificationRule.id)
+            //generate new notification
+            val updatedNotification = notificationFactory.next(birthday, notificationRule)
+            insertNewNotification(updatedNotification)
+        }
     }
 
     @WorkerThread
@@ -95,13 +94,8 @@ class BirthdayRepository(
         birthday: Birthday,
         notificationRule: NotificationRule
     ) {
-        Timber.d("birthdayId: ${birthday.id}")
-
-        Timber.d("notificationRule.id: ${notificationRule.id}")
-        val newNotificationRuleId = notificationRuleDao.insert(notificationRule)
-        Timber.d("newNotificationRuleId: $newNotificationRuleId")
-        notificationRule.id = newNotificationRuleId
-
+        notificationRule.version = 1
+        notificationRule.id = notificationRuleDao.insert(notificationRule)
         val notification =
             notificationFactory.next(birthday, notificationRule)
         insertNewNotification(notification)
@@ -132,6 +126,12 @@ class BirthdayRepository(
         return notificationWithNotificationRuleAndBirthdayDao.getNotificationWithBirthdayAndNotificationRule(
             currentDateTime
         )
+    }
+
+    @WorkerThread
+    suspend fun updateActivationStatus(birthday: Birthday, value: Boolean) {
+        birthday.notificationActive = value
+        updateBirthday(birthday)
     }
 }
 
